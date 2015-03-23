@@ -1,10 +1,11 @@
 #include "application.hh"
+#include "settingsdialog.hh"
 #include <QMenu>
 
 
-Application::Application(int argc, char *argv[]) :
+Application::Application(int &argc, char *argv[]) :
   QApplication(argc, argv),
-  _settings("com.github.hmatuschek", "Countdown"), _timer()
+  _settings("com.github.hmatuschek", "Countdown"), _timer(), _menu(0)
 {
   _running = false;
   _timeLeft = 10*duration();
@@ -13,28 +14,31 @@ Application::Application(int argc, char *argv[]) :
   _timer.setInterval(6000);
   _timer.setSingleShot(false);
 
-  _menu = new QMenu();
-  _startStop = _menu->addAction(tr("Start"));
+  // Assemble actions
+  _startStop = new QAction(tr("Start"), this);
   _startStop->setCheckable(true);
   _startStop->setChecked(false);
-
-  _menu->addSeparator();
-
-  _showFullScreen = _menu->addAction(tr("Full screen"));
+  _showFullScreen = new QAction(tr("Full screen"), this);
   _showFullScreen->setCheckable(true);
   _showFullScreen->setChecked(false);
+  _showSettings = new QAction(tr("Settings..."), this);
+  _quit  = new QAction(tr("Quit"), this);
 
-  QMenu *settings = new QMenu(tr("Settings"), _menu);
-  _durationSettings = settings->addAction(tr("Duration: %1 min").arg(duration()));
-  _lastMinutesSettings = settings->addAction(tr("Last minutes: %1 min").arg(lastMinutes()));
-  _menu->addMenu(settings);
-  _menu->addSeparator();
+  // Load sound effects
+  _lmSound = new QSoundEffect();
+  _endSound = new QSoundEffect();
+  if (! lastMinutesSound().isEmpty()) {
+    _lmSound->setSource(QUrl::fromLocalFile(lastMinutesSound()));
+  }
+  _lmSound->setLoopCount(1);
+  if (! endSound().isEmpty()) {
+    _endSound->setSource(QUrl::fromLocalFile(endSound()));
+  }
+  _endSound->setLoopCount(1);
 
-  _quit  = _menu->addAction(tr("Quit"));
-
-
-  QObject::connect(_startStop, SIGNAL(toggled(bool)), this, SLOT(onStartStop(bool)));
+  QObject::connect(_startStop, SIGNAL(toggled(bool)), this, SLOT(startTimer(bool)));
   QObject::connect(&_timer, SIGNAL(timeout()), this, SLOT(onUpdateTimeLeft()));
+  QObject::connect(_showSettings, SIGNAL(triggered()), this, SLOT(onShowSettings()));
 }
 
 int
@@ -90,18 +94,81 @@ Application::setShowTimeLeft(bool show) {
 }
 
 bool
+Application::showTicks() {
+  return _settings.value("showTicks", true).toBool();
+}
+
+void
+Application::setShowTicks(bool show) {
+  _settings.setValue("showTicks", show);
+}
+
+QColor
+Application::timeColor() {
+  return _settings.value("timeColor", QColor("blue")).value<QColor>();
+}
+
+void
+Application::setTimeColor(const QColor &color) {
+  _settings.setValue("timeColor", color);
+}
+
+QColor
+Application::lastMinutesColor() {
+  return _settings.value("lastMinutesColor", QColor("red")).value<QColor>();
+}
+
+void
+Application::setLastMinutesColor(const QColor &color) {
+  return _settings.setValue("lastMinutesColor", color);
+}
+
+bool
 Application::isInLastMinutes() {
-  return _running && (0 != _timeLeft) && (_timeLeft/10 <= lastMinutes());
+  return _running && (0 != _timeLeft) && (_timeLeft <= 10*lastMinutes());
+}
+
+QString
+Application::endSound() {
+  return _settings.value("endSound").toString();
+}
+
+void
+Application::setEndSound(const QString &file) {
+  return _settings.setValue("endSound", file);
+}
+
+QString
+Application::lastMinutesSound() {
+  return _settings.value("lastMinutesSound").toString();
+}
+
+void
+Application::setLastMinutesSound(const QString &file) {
+  return _settings.setValue("lastMinutesSound", file);
 }
 
 
-QMenu   *Application::menu() { return _menu; }
+QMenu   *Application::menu() {
+  if (0 == _menu) {
+    // Assemble Menu
+    _menu = new QMenu();
+    _menu->addAction(_startStop);
+    _menu->addSeparator();
+    _menu->addAction(_showFullScreen);
+    _menu->addAction(_showSettings);
+    _menu->addSeparator();
+    _menu->addAction(_quit);
+  }
+  return _menu;
+}
+
 QAction *Application::actShowFullScreen() { return _showFullScreen; }
 QAction *Application::actQuit() { return _quit; }
 
 
 void
-Application::onStartStop(bool start) {
+Application::startTimer(bool start) {
   _running = start;
   if (_running) {
     _timeLeft = 10*duration();
@@ -120,9 +187,28 @@ Application::onUpdateTimeLeft()
   _timeLeft--;
 
   if (0 == _timeLeft) {
-    // Signal End
-  } else if (lastMinutes() == (_timeLeft/10)) {
-    // Signal last minutes
+    startTimer(false);
+    _endSound->play();
+  } else if (10*lastMinutes() == (_timeLeft)) {
+    _lmSound->play();
   }
   emit updateClock();
+}
+
+void
+Application::onShowSettings() {
+  SettingsDialog dialog(*this);
+  if (QDialog::Accepted != dialog.exec()) { return; }
+
+  setEndSound(dialog.endSound());
+  setLastMinutesSound(dialog.lastMinutesSound());
+
+  setTimeColor(dialog.timeColor());
+  setLastMinutesColor(dialog.lastMinutesColor());
+
+  setShowTicks(dialog.showTicks());
+  setShowTimeLeft(dialog.showTimeLeft());
+
+  setDuration(dialog.duration());
+  setLastMinutes(dialog.lastMinutes());
 }

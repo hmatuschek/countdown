@@ -5,6 +5,8 @@
 #include <QAction>
 #include <QSettings>
 #include <QTimer>
+#include <QString>
+#include <QSoundEffect>
 
 
 class Application : public QApplication
@@ -12,7 +14,7 @@ class Application : public QApplication
   Q_OBJECT
 
 public:
-  explicit Application(int argc, char *argv[]);
+  explicit Application(int &argc, char *argv[]);
 
   int duration();
   void setDuration(int dur);
@@ -27,20 +29,37 @@ public:
   bool showTimeLeft();
   void setShowTimeLeft(bool show);
 
+  bool showTicks();
+  void setShowTicks(bool show);
+
+  QColor timeColor();
+  void setTimeColor(const QColor &color);
+  QColor lastMinutesColor();
+  void setLastMinutesColor(const QColor &color);
+
   bool isInLastMinutes();
+
+  QString endSound();
+  void setEndSound(const QString &file);
+
+  QString lastMinutesSound();
+  void setLastMinutesSound(const QString &file);
 
 public:
   QAction *actShowFullScreen();
   QAction *actQuit();
   QMenu   *menu();
 
+public slots:
+  void startTimer(bool start);
+
 signals:
   void updateClock();
   void durationChanged();
 
 protected slots:
-  void onStartStop(bool start);
   void onUpdateTimeLeft();
+  void onShowSettings();
 
 protected:
   QSettings _settings;
@@ -51,9 +70,11 @@ protected:
   QMenu   *_menu;
   QAction *_startStop;
   QAction *_showFullScreen;
-  QAction *_durationSettings;
-  QAction *_lastMinutesSettings;
+  QAction *_showSettings;
   QAction *_quit;
+
+  QSoundEffect *_lmSound;
+  QSoundEffect *_endSound;
 };
 
 #endif // APPLICATION_HH

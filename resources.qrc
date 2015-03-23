@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>sounds/bell_factory_break.wav</file>
+        <file>sounds/big_bell.wav</file>
+        <file>sounds/medieval_bell.wav</file>
+        <file>sounds/mono_bell.wav</file>
+        <file>sounds/school_bell.wav</file>
+        <file>sounds/single_chime.wav</file>
+    </qresource>
+</RCC>

@@ -23,6 +23,7 @@ protected:
 
   virtual void paintEvent(QPaintEvent *evt);
   void mouseReleaseEvent(QMouseEvent *evt);
+  void mouseMoveEvent(QMouseEvent *evt);
 
 protected:
   Application &_app;

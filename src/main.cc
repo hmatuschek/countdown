@@ -6,9 +6,9 @@ int main(int argc, char *argv[])
 {
   Application app(argc,argv);
 
-  MainWindow win(app);
+  MainWindow *win = new MainWindow(app);
 
-  win.show();
+  win->show();
 
   app.exec();
 
