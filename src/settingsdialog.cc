@@ -4,7 +4,7 @@
 #include <QDialogButtonBox>
 #include <QFormLayout>
 #include <QColorDialog>
-
+#include "soundselect.hh"
 
 SettingsDialog::SettingsDialog(Application &app, QWidget *parent)
   : QDialog(parent), _app(app)
@@ -25,6 +25,7 @@ SettingsDialog::SettingsDialog(Application &app, QWidget *parent)
   timerPage->setLayout(timerLayout);
   pages->addTab(timerPage, tr("Timer"));
 
+  /* Sound settings */
   QVector< QPair<QString,QString> > sounds;
   sounds << QPair<QString,QString>(tr("<none>"),"")
          << QPair<QString,QString>(tr("Factory Bell"), "://sounds/bell_factory_break.wav")
@@ -33,20 +34,10 @@ SettingsDialog::SettingsDialog(Application &app, QWidget *parent)
          << QPair<QString,QString>(tr("Mono Bell"), "://sounds/mono_bell.wav")
          << QPair<QString,QString>(tr("School Bell"), "://sounds/school_bell.wav")
          << QPair<QString,QString>(tr("Single Chime"), "://sounds/single_chime.wav");
-
-  /* Sound settings */
   QWidget *soundPage = new QWidget();
   QFormLayout *soundLayout = new QFormLayout();
-  _lmSound = new QComboBox();
-  for (int i=0; i<sounds.size(); i++) {
-    _lmSound->addItem(sounds[i].first, sounds[i].second);
-    if (_app.lastMinutesSound() == sounds[i].second) { _lmSound->setCurrentIndex(i); }
-  }
-  _endSound = new QComboBox();
-  for (int i=0; i<sounds.size(); i++) {
-    _endSound->addItem(sounds[i].first, sounds[i].second);
-    if (_app.endSound() == sounds[i].second) { _endSound->setCurrentIndex(i); }
-  }
+  _lmSound = new SoundSelect(sounds, _app.lastMinutesSound());
+  _endSound = new SoundSelect(sounds, _app.endSound());
   soundLayout->addRow(tr("Last minutes sound"), _lmSound);
   soundLayout->addRow(tr("End sound"), _endSound);
   soundPage->setLayout(soundLayout);

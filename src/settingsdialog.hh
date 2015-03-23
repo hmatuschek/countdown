@@ -7,6 +7,8 @@
 #include <QCheckBox>
 #include "application.hh"
 #include "colorbutton.hh"
+#include "soundselect.hh"
+
 
 class SettingsDialog : public QDialog
 {
@@ -18,8 +20,8 @@ public:
   inline int duration() { return _duration->value(); }
   inline int lastMinutes() { return _lastMinutes->value(); }
 
-  inline QString lastMinutesSound() { return _lmSound->currentData().toString(); }
-  inline QString endSound() { return _endSound->currentData().toString(); }
+  inline QString lastMinutesSound() { return _lmSound->selectedSound(); }
+  inline QString endSound() { return _endSound->selectedSound(); }
 
   inline const QColor &timeColor() const { return _timeColor->color(); }
   inline const QColor &lastMinutesColor() const { return _lmColor->color(); }
@@ -31,8 +33,8 @@ protected:
   Application &_app;
   QSpinBox *_duration;
   QSpinBox *_lastMinutes;
-  QComboBox *_endSound;
-  QComboBox *_lmSound;
+  SoundSelect *_endSound;
+  SoundSelect *_lmSound;
   ColorButton *_timeColor;
   ColorButton *_lmColor;
   QCheckBox   *_showTimeLeft;

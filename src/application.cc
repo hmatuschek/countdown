@@ -171,11 +171,13 @@ void
 Application::startTimer(bool start) {
   _running = start;
   if (_running) {
+    _startStop->setChecked(true);
     _timeLeft = 10*duration();
     _timer.start();
   } else {
+    _startStop->setChecked(false);
     _timer.stop();
-    _timeLeft = 0;
+    _timeLeft = 10*duration();
   }
   emit updateClock();
 }

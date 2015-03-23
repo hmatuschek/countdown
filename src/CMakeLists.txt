@@ -1,7 +1,7 @@
 set(timer_SOURCES main.cc
-    main.cc countdown.cc application.cc mainwindow.cc settingsdialog.cc colorbutton.cc)
+    countdown.cc application.cc mainwindow.cc settingsdialog.cc colorbutton.cc soundselect.cc)
 set(timer_MOC_HEADERS
-    countdown.hh application.hh mainwindow.hh settingsdialog.hh colorbutton.hh)
+    countdown.hh application.hh mainwindow.hh settingsdialog.hh colorbutton.hh soundselect.hh)
 set(timer_HEADERS ${plot232_MOC_HEADERS})
 
 qt5_wrap_cpp(timer_MOC_SOURCES ${timer_MOC_HEADERS})

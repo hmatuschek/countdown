@@ -5,7 +5,7 @@
 ColorButton::ColorButton(const QColor &color, QWidget *parent)
   : QPushButton(parent), _color(color)
 {
-  setMinimumSize(128+10, 32+10);
+  setMinimumSize(64+10, 16+10);
   QObject::connect(this, SIGNAL(clicked()), this, SLOT(onSelectColor()));
 }
 
