@@ -26,18 +26,10 @@ SettingsDialog::SettingsDialog(Application &app, QWidget *parent)
   pages->addTab(timerPage, tr("Timer"));
 
   /* Sound settings */
-  QVector< QPair<QString,QString> > sounds;
-  sounds << QPair<QString,QString>(tr("<none>"),"")
-         << QPair<QString,QString>(tr("Factory Bell"), "://sounds/bell_factory_break.wav")
-         << QPair<QString,QString>(tr("Big Bell"), "://sounds/big_bell.wav")
-         << QPair<QString,QString>(tr("Medieval Bell"), "://sounds/medieval_bell.wav")
-         << QPair<QString,QString>(tr("Mono Bell"), "://sounds/mono_bell.wav")
-         << QPair<QString,QString>(tr("School Bell"), "://sounds/school_bell.wav")
-         << QPair<QString,QString>(tr("Single Chime"), "://sounds/single_chime.wav");
   QWidget *soundPage = new QWidget();
   QFormLayout *soundLayout = new QFormLayout();
-  _lmSound = new SoundSelect(sounds, _app.lastMinutesSound());
-  _endSound = new SoundSelect(sounds, _app.endSound());
+  _lmSound = new SoundSelect(_app.soundItems(), _app.lastMinutesSound());
+  _endSound = new SoundSelect(_app.soundItems(), _app.endSound());
   soundLayout->addRow(tr("Last minutes sound"), _lmSound);
   soundLayout->addRow(tr("End sound"), _endSound);
   soundPage->setLayout(soundLayout);

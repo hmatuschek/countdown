@@ -5,7 +5,7 @@
 #include <QComboBox>
 #include <QPushButton>
 #include <QSoundEffect>
-
+#include "application.hh"
 
 /** A small widget to select and test selected sounds. */
 class SoundSelect : public QWidget
@@ -13,18 +13,14 @@ class SoundSelect : public QWidget
   Q_OBJECT
 
 public:
-  /** Container type for known sounds. The first element is the name and the second a file path
-   * to the WAVE file. Qt resource paths are possible. */
-  typedef QVector< QPair<QString, QString>  > SoundItemList;
-
-public:
-  explicit SoundSelect(const SoundItemList &sounds, const QString &selectedSound,
+  explicit SoundSelect(const Application::SoundItemList &sounds, const QString &selectedSound,
                        QWidget *parent = 0);
 
   /** Returns the path to the selected sound. */
   inline QString selectedSound() { return _sounds->currentData().toString(); }
 
 protected slots:
+  void onSoundSelected(int idx);
   /** Start/stops playback. */
   void onPlayToggled(bool play);
   /** Gets called once the playback started or stopped. */

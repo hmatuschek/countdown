@@ -51,12 +51,13 @@ Countdown::showMenu(const QPoint &pos) {
 void
 Countdown::mouseReleaseEvent(QMouseEvent *evt) {
   QWidget::mouseReleaseEvent(evt);
-  if (Qt::LeftButton == evt->button() && !_app.running()) {
+  if (Qt::LeftButton == evt->button() && (Application::RUNNING!=_app.timerState())) {
     QPoint center(rect().width()/2, rect().height()/2);
     float scale = float(std::min(width(),height()))/200;
     QRect playBB(center.x()-10*scale,center.y()-20*scale, 30*scale,40*scale);
     if (playBB.contains(evt->pos())) {
-      unsetCursor(); _app.startTimer(true);
+      unsetCursor();
+      _app.setTimerState(Application::RUNNING);
     }
   }
 }
@@ -65,7 +66,7 @@ Countdown::mouseReleaseEvent(QMouseEvent *evt) {
 void
 Countdown::mouseMoveEvent(QMouseEvent *evt) {
   QWidget::mouseMoveEvent(evt);
-  if (! _app.running()) {
+  if (Application::RUNNING != _app.timerState()) {
     QPoint center(rect().width()/2, rect().height()/2);
     float scale = float(std::min(width(),height()))/200;
     QRect playBB(center.x()-10*scale,center.y()-20*scale, 30*scale,40*scale);
@@ -127,7 +128,7 @@ Countdown::paintEvent(QPaintEvent *evt)
   }
 
   // Draw play "button" if not running
-  if (! _app.running()) {
+  if (Application::RUNNING != _app.timerState()) {
     QColor bg(255,255,255,200);
     painter.setPen(bg); painter.setBrush(bg);
     painter.drawRect(-100,-100, 200,200);

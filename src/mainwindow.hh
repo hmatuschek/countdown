@@ -13,6 +13,8 @@ class MainWindow : public QMainWindow
 public:
   explicit MainWindow(Application &app);
 
+  void closeEvent(QCloseEvent *evt);
+
 protected:
   Application &_app;
   Countdown *_countdown;

@@ -2,6 +2,7 @@
 #include "settingsdialog.hh"
 #include "mainwindow.hh"
 #include <QMenu>
+#include <QFileInfo>
 
 
 Application::Application(int &argc, char *argv[]) :
@@ -10,35 +11,54 @@ Application::Application(int &argc, char *argv[]) :
 {
   setWindowIcon(QIcon("://icons/icon32.png"));
 
-  _running = false;
+  _timerState = STOPPED;
   _timeLeft = 10*duration();
 
   // 10x per minute
   _timer.setInterval(6000);
   _timer.setSingleShot(false);
 
+
   // Assemble actions
   _startStop = new QAction(tr("Start"), this);
-  _startStop->setCheckable(true);
-  _startStop->setChecked(false);
+  _pause     = new QAction(tr("Pause"), this);
+  _pause->setEnabled(false);
 
   _hideClock = new QAction(tr("Hide"), this);
   _hideClock->setCheckable(true);
-  _hideClock->setChecked(isClockHidden());
+  _hideClock->setChecked(false);
   _showNormal = new QAction(tr("Normal"), this);
   _showNormal->setCheckable(true);
-  _showNormal->setChecked(! isClockHidden());
+  _showNormal->setChecked(true);
+  _showOnTop = new QAction(tr("On top"), this);
+  _showOnTop->setCheckable(true);
+  _showOnTop->setChecked(false);
   _showFullScreen = new QAction(tr("Full screen"), this);
   _showFullScreen->setCheckable(true);
   _showFullScreen->setChecked(false);
-  _display = new QActionGroup(this);
-  _display->setExclusive(true);
-  _display->addAction(_hideClock);
-  _display->addAction(_showNormal);
-  _display->addAction(_showFullScreen);
+  _clockDisplay = new QActionGroup(this);
+  _clockDisplay->setExclusive(true);
+  _clockDisplay->addAction(_hideClock);
+  _clockDisplay->addAction(_showNormal);
+  _clockDisplay->addAction(_showOnTop);
+  _clockDisplay->addAction(_showFullScreen);
 
   _showSettings = new QAction(tr("Settings..."), this);
   _quit  = new QAction(tr("Quit"), this);
+
+  // Create main window
+  _mainWindow = new MainWindow(*this);
+  setClockVisibility(NORMAL);
+
+  /// @bug Create persistent settings dialog
+
+  // create list of known sounds
+  _sounds << QPair<QString,QString>(tr("Factory Bell"), "://sounds/bell_factory_break.wav")
+      << QPair<QString,QString>(tr("Big Bell"), "://sounds/big_bell.wav")
+      << QPair<QString,QString>(tr("Medieval Bell"), "://sounds/medieval_bell.wav")
+      << QPair<QString,QString>(tr("Mono Bell"), "://sounds/mono_bell.wav")
+      << QPair<QString,QString>(tr("School Bell"), "://sounds/school_bell.wav")
+      << QPair<QString,QString>(tr("Single Chime"), "://sounds/single_chime.wav");
 
   // Load sound effects
   _lmSound = new QSoundEffect();
@@ -52,50 +72,43 @@ Application::Application(int &argc, char *argv[]) :
   }
   _endSound->setLoopCount(1);
 
-  QObject::connect(_startStop, SIGNAL(toggled(bool)), this, SLOT(startTimer(bool)));
+  QObject::connect(_startStop, SIGNAL(triggered()), this, SLOT(onTimerStart()));
+  QObject::connect(_pause, SIGNAL(triggered()), this, SLOT(onTimerPause()));
   QObject::connect(&_timer, SIGNAL(timeout()), this, SLOT(onUpdateTimeLeft()));
   QObject::connect(_showSettings, SIGNAL(triggered()), this, SLOT(onShowSettings()));
-  QObject::connect(_display, SIGNAL(triggered(QAction*)),
+  QObject::connect(_clockDisplay, SIGNAL(triggered(QAction*)),
                    this, SLOT(onClockVisibilityChanged(QAction*)));
   QObject::connect(_quit, SIGNAL(triggered()), this, SLOT(onQuit()));
 
-  _mainWindow = new MainWindow(*this);
-  if (isClockHidden()) {
-    _mainWindow->setVisible(false);
-  } else {
-    _mainWindow->show();
+}
+
+
+Application::TimerState
+Application::timerState() const {
+  return _timerState;
+}
+
+void
+Application::setTimerState(TimerState state) {
+  _timerState = state;
+  if (RUNNING == _timerState) {
+    _pause->setEnabled(true);
+    _startStop->setText(tr("Stop"));
+    _pause->setText(tr("Pause"));
+    _timer.start();
+  } else if (STOPPED == _timerState) {
+    _pause->setEnabled(false);
+    _startStop->setText(tr("Start"));
+    _pause->setText(tr("Pause"));
+    _timer.stop();
+    _timeLeft = 10*duration();
+  } else if (PAUSED == _timerState) {
+    _pause->setEnabled(true);
+    _startStop->setText(tr("Stop"));
+    _pause->setText(tr("Resume"));
+    _timer.stop();
   }
-}
-
-int
-Application::duration() {
-  return _settings.value("duration", 45).toInt();
-}
-
-void
-Application::setDuration(int dur) {
-  dur = std::max(0, dur);
-  _settings.setValue("duration", std::max(0, dur));
-
-  _timeLeft = std::min(10*dur, _timeLeft);
-  emit durationChanged();
   emit updateClock();
-}
-
-int
-Application::lastMinutes() {
-  return _settings.value("lastMinutes", 5).toInt();
-}
-
-void
-Application::setLastMinutes(int N) {
-  N = std::max(0, N);
-  _settings.setValue("lastMinutes", N);
-}
-
-bool
-Application::running() const {
-  return _running;
 }
 
 int
@@ -108,93 +121,215 @@ Application::ticksLeft() const {
   return _timeLeft;
 }
 
-bool
-Application::showTimeLeft() {
-  return _settings.value("showTimeLeft", true).toBool();
+Application::ClockVisibility
+Application::clockVisibility() const {
+  return _clockVisibility;
 }
 
 void
-Application::setShowTimeLeft(bool show) {
-  return _settings.setValue("showTimeLeft", show);
+Application::setClockVisibility(ClockVisibility vis) {
+  _clockVisibility = vis;
+  Qt::WindowFlags flags = _mainWindow->windowFlags();
+  switch (_clockVisibility) {
+  case HIDDEN:
+    _mainWindow->setWindowFlags(flags ^ (Qt::CustomizeWindowHint | Qt::WindowStaysOnTopHint));
+    _mainWindow->showNormal();
+    _mainWindow->hide();
+    _hideClock->setChecked(true);
+    break;
+  case NORMAL:
+    _mainWindow->setWindowFlags(flags ^ (Qt::CustomizeWindowHint | Qt::WindowStaysOnTopHint));
+    _mainWindow->showNormal();
+    _mainWindow->activateWindow();
+    _showNormal->setChecked(true);
+    break;
+  case ONTOP:
+    _mainWindow->setWindowFlags(flags | (Qt::CustomizeWindowHint | Qt::WindowStaysOnTopHint));
+    _mainWindow->showNormal();
+    _mainWindow->activateWindow();
+    _showOnTop->setChecked(true);
+    break;
+  case FULLSCREEN:
+    _mainWindow->setWindowFlags(flags ^ (Qt::CustomizeWindowHint | Qt::WindowStaysOnTopHint));
+    _mainWindow->showFullScreen();
+    _showFullScreen->setChecked(true);
+    break;
+  }
+}
+
+QString
+Application::profile() {
+  return _settings.value("profile", "").toString();
+}
+
+void
+Application::setProfile(const QString &profile) {
+  _settings.setValue("profile", profile);
+}
+
+int
+Application::duration(const QString &prof) {
+  QString profile = prof;
+  if (profile.isEmpty()) { profile = this->profile(); }
+  return _settings.value(QString("%1/duration").arg(profile), 45).toInt();
+}
+
+void
+Application::setDuration(int dur, const QString &prof) {
+  dur = std::max(0, dur);
+  QString profile = prof;
+  if (profile.isEmpty()) { profile = this->profile(); }
+  _settings.setValue(QString("%1/duration").arg(profile), std::max(0, dur));
+
+  _timeLeft = std::min(10*dur, _timeLeft);
+  emit durationChanged();
+  emit updateClock();
+}
+
+int
+Application::lastMinutes(const QString &prof) {
+  QString profile = prof;
+  if (profile.isEmpty()) { profile = this->profile(); }
+  return _settings.value(QString("%1/lastMinutes").arg(profile), 5).toInt();
+}
+
+void
+Application::setLastMinutes(int N, const QString &prof) {
+  N = std::max(0, N);
+  QString profile = prof;
+  if (profile.isEmpty()) { profile = this->profile(); }
+  _settings.setValue(QString("%1/lastMinutes").arg(profile), N);
+}
+
+bool
+Application::showTimeLeft(const QString &prof) {
+  QString profile = prof;
+  if (profile.isEmpty()) { profile = this->profile(); }
+  return _settings.value(QString("%1/showTimeLeft").arg(profile), true).toBool();
+}
+
+void
+Application::setShowTimeLeft(bool show, const QString &prof) {
+  QString profile = prof;
+  if (profile.isEmpty()) { profile = this->profile(); }
+  return _settings.setValue(QString("%1/showTimeLeft").arg(profile), show);
   emit updateClock();
 }
 
 bool
-Application::showTicks() {
-  return _settings.value("showTicks", true).toBool();
+Application::showTicks(const QString &prof) {
+  QString profile = prof;
+  if (profile.isEmpty()) { profile = this->profile(); }
+  return _settings.value(QString("%1/showTicks").arg(profile), true).toBool();
 }
 
 void
-Application::setShowTicks(bool show) {
-  _settings.setValue("showTicks", show);
+Application::setShowTicks(bool show, const QString &prof) {
+  QString profile = prof;
+  if (profile.isEmpty()) { profile = this->profile(); }
+  _settings.setValue(QString("%1/showTicks").arg(profile), show);
 }
 
 QColor
-Application::timeColor() {
-  return _settings.value("timeColor", QColor("blue")).value<QColor>();
+Application::timeColor(const QString &prof) {
+  QString profile = prof;
+  if (profile.isEmpty()) { profile = this->profile(); }
+  return _settings.value(QString("%1/timeColor").arg(profile),
+                         QColor("blue")).value<QColor>();
 }
 
 void
-Application::setTimeColor(const QColor &color) {
-  _settings.setValue("timeColor", color);
+Application::setTimeColor(const QColor &color, const QString &prof) {
+  QString profile = prof;
+  if (profile.isEmpty()) { profile = this->profile(); }
+  _settings.setValue(QString("%1/timeColor").arg(profile), color);
 }
 
 QColor
-Application::lastMinutesColor() {
-  return _settings.value("lastMinutesColor", QColor("red")).value<QColor>();
+Application::lastMinutesColor(const QString &prof) {
+  QString profile = prof;
+  if (profile.isEmpty()) { profile = this->profile(); }
+  return _settings.value(QString("%1/lastMinutesColor").arg(profile),
+                         QColor("red")).value<QColor>();
 }
 
 void
-Application::setLastMinutesColor(const QColor &color) {
-  return _settings.setValue("lastMinutesColor", color);
+Application::setLastMinutesColor(const QColor &color, const QString &prof) {
+  QString profile = prof;
+  if (profile.isEmpty()) { profile = this->profile(); }
+  return _settings.setValue(QString("%1/lastMinutesColor").arg(profile), color);
 }
 
 bool
 Application::isInLastMinutes() {
-  return _running && (0 != _timeLeft) && (_timeLeft <= 10*lastMinutes());
+  return (0 < _timeLeft) && (_timeLeft <= 10*lastMinutes());
 }
 
-QString
-Application::endSound() {
-  return _settings.value("endSound").toString();
-}
-
-void
-Application::setEndSound(const QString &file) {
-  return _settings.setValue("endSound", file);
-}
-
-QString
-Application::lastMinutesSound() {
-  return _settings.value("lastMinutesSound").toString();
-}
-
-void
-Application::setLastMinutesSound(const QString &file) {
-  return _settings.setValue("lastMinutesSound", file);
+const Application::SoundItemList &
+Application::soundItems() const {
+  return _sounds;
 }
 
 bool
-Application::isClockHidden() {
-  return _settings.value("clockHidden", true).toBool();
+Application::hasSoundItem(const QString &filename) const {
+  QFileInfo info(filename);
+  QPair<QString, QString> pair;
+  foreach (pair, _sounds) {
+    if (pair.second == info.canonicalFilePath()) { return true; }
+  }
+  return false;
 }
 
 void
-Application::setClockHidden(bool hidden) {
-  _settings.setValue("clockHidden", hidden);
+Application::addSoundItem(const QString &filename) {
+  QFileInfo info(filename);
+  if (! hasSoundItem(filename)) {
+    _sounds << QPair<QString,QString>(info.baseName(), info.canonicalFilePath());
+  }
 }
+
+QString
+Application::endSound(const QString &prof) {
+  QString profile = prof;
+  if (profile.isEmpty()) { profile = this->profile(); }
+  return _settings.value(QString("%1/endSound").arg(profile)).toString();
+}
+
+void
+Application::setEndSound(const QString &file, const QString &prof) {
+  QString profile = prof;
+  if (profile.isEmpty()) { profile = this->profile(); }
+  return _settings.setValue(QString("%1/endSound").arg(profile), file);
+}
+
+QString
+Application::lastMinutesSound(const QString &prof) {
+  QString profile = prof;
+  if (profile.isEmpty()) { profile = this->profile(); }
+  return _settings.value(QString("%1/lastMinutesSound").arg(profile)).toString();
+}
+
+void
+Application::setLastMinutesSound(const QString &file, const QString &prof) {
+  QString profile = prof;
+  if (profile.isEmpty()) { profile = this->profile(); }
+  return _settings.setValue(QString("%1/lastMinutesSound").arg(profile), file);
+}
+
 
 QMenu   *Application::menu() {
   if (0 == _menu) {
     // Assemble Menu
     _menu = new QMenu();
     _menu->addAction(_startStop);
-    _menu->addAction(_showSettings);
+    _menu->addAction(_pause);
     _menu->addSeparator();
-    _menu->addSection(tr("Visibility"));
     _menu->addAction(_hideClock);
     _menu->addAction(_showNormal);
+    _menu->addAction(_showOnTop);
     _menu->addAction(_showFullScreen);
+    _menu->addSeparator();
+    _menu->addAction(_showSettings);
     _menu->addSeparator();
     _menu->addAction(_quit);
   }
@@ -203,20 +338,16 @@ QMenu   *Application::menu() {
 
 
 void
-Application::startTimer(bool start) {
-  _running = start;
-  if (_running) {
-    _startStop->setChecked(true);
-    _timeLeft = 10*duration();
-    _timer.start();
-  } else {
-    _startStop->setChecked(false);
-    _timer.stop();
-    _timeLeft = 10*duration();
-  }
-  emit updateClock();
+Application::onTimerStart() {
+  if (STOPPED == timerState()) { setTimerState(RUNNING); }
+  else { setTimerState(STOPPED); }
 }
 
+void
+Application::onTimerPause() {
+  if (RUNNING == timerState()) { setTimerState(PAUSED); }
+  else { setTimerState(RUNNING); }
+}
 
 void
 Application::onUpdateTimeLeft()
@@ -224,7 +355,7 @@ Application::onUpdateTimeLeft()
   _timeLeft--;
 
   if (0 == _timeLeft) {
-    startTimer(false);
+    setTimerState(STOPPED);
     _endSound->play();
   } else if (10*lastMinutes() == (_timeLeft)) {
     _lmSound->play();
@@ -236,22 +367,19 @@ Application::onUpdateTimeLeft()
 void
 Application::onClockVisibilityChanged(QAction *action) {
   if (_hideClock == action) {
-    _mainWindow->showNormal();
-    _mainWindow->hide();
-    setClockHidden(true);
+    setClockVisibility(HIDDEN);
   } else if (_showNormal == action) {
-    _mainWindow->showNormal();
-    _mainWindow->activateWindow();
-    setClockHidden(false);
+    setClockVisibility(NORMAL);
+  } else if (_showOnTop == action) {
+    setClockVisibility(ONTOP);
   } else if (_showFullScreen == action) {
-    _mainWindow->showFullScreen();
-    setClockHidden(false);
+    setClockVisibility(FULLSCREEN);
   }
 }
 
 void
 Application::onQuit() {
-  _mainWindow->close();
+  quit();
 }
 
 void
@@ -270,4 +398,6 @@ Application::onShowSettings() {
 
   setDuration(dialog.duration());
   setLastMinutes(dialog.lastMinutes());
+
+  dialog.hide();
 }

@@ -8,7 +8,7 @@
 #include <QTimer>
 #include <QString>
 #include <QSoundEffect>
-
+#include <QPair>
 
 // Forward declaration
 class MainWindow;
@@ -19,51 +19,74 @@ class Application : public QApplication
   Q_OBJECT
 
 public:
+  /** Possible states of the timer. Initially: STOPPED. */
+  typedef enum {
+    STOPPED, PAUSED, RUNNING
+  } TimerState;
+
+  /** Possible clock-window visibility settings. */
+  typedef enum {
+    HIDDEN, NORMAL, ONTOP, FULLSCREEN
+  } ClockVisibility;
+
+  /** Container type for known sounds. The first element is the name and the second a file path
+   * to the WAVE file. Qt resource paths are possible. */
+  typedef QVector< QPair<QString, QString>  > SoundItemList;
+
+public:
   explicit Application(int &argc, char *argv[]);
 
-  int duration();
-  void setDuration(int dur);
+  QString profile();
+  void setProfile(const QString &profile);
 
-  int lastMinutes();
-  void setLastMinutes(int N);
+  int duration(const QString &prof=QString());
+  void setDuration(int dur, const QString &prof=QString());
 
-  bool running() const;
+  int lastMinutes(const QString &prof=QString());
+  void setLastMinutes(int N, const QString &prof=QString());
+
+  TimerState timerState() const;
+  void setTimerState(TimerState state);
+
+  ClockVisibility clockVisibility() const;
+  void setClockVisibility(ClockVisibility vis);
+
   int timeLeft() const;
   int ticksLeft() const;
 
-  bool showTimeLeft();
-  void setShowTimeLeft(bool show);
+  bool showTimeLeft(const QString &prof=QString());
+  void setShowTimeLeft(bool show, const QString &prof=QString());
 
-  bool showTicks();
-  void setShowTicks(bool show);
+  bool showTicks(const QString &prof=QString());
+  void setShowTicks(bool show, const QString &prof=QString());
 
-  QColor timeColor();
-  void setTimeColor(const QColor &color);
-  QColor lastMinutesColor();
-  void setLastMinutesColor(const QColor &color);
+  QColor timeColor(const QString &prof=QString());
+  void setTimeColor(const QColor &color, const QString &prof=QString());
+  QColor lastMinutesColor(const QString &prof=QString());
+  void setLastMinutesColor(const QColor &color, const QString &prof=QString());
 
   bool isInLastMinutes();
 
-  QString endSound();
-  void setEndSound(const QString &file);
+  const SoundItemList &soundItems() const;
+  bool hasSoundItem(const QString &filename) const;
+  void addSoundItem(const QString &filename);
 
-  QString lastMinutesSound();
-  void setLastMinutesSound(const QString &file);
+  QString endSound(const QString &prof=QString());
+  void setEndSound(const QString &file, const QString &prof=QString());
 
-  bool isClockHidden();
-  void setClockHidden(bool hidden);
+  QString lastMinutesSound(const QString &prof=QString());
+  void setLastMinutesSound(const QString &file, const QString &prof=QString());
 
 public:
   QMenu   *menu();
-
-public slots:
-  void startTimer(bool start);
 
 signals:
   void updateClock();
   void durationChanged();
 
 protected slots:
+  void onTimerStart();
+  void onTimerPause();
   void onUpdateTimeLeft();
   void onClockVisibilityChanged(QAction *action);
   void onShowSettings();
@@ -74,15 +97,20 @@ protected:
 
   MainWindow *_mainWindow;
 
-  bool _running;
+  TimerState _timerState;
   int  _timeLeft;
   QTimer _timer;
 
+  ClockVisibility _clockVisibility;
+  SoundItemList _sounds;
+
   QMenu   *_menu;
   QAction *_startStop;
-  QActionGroup *_display;
+  QAction *_pause;
+  QActionGroup *_clockDisplay;
   QAction *_hideClock;
   QAction *_showNormal;
+  QAction *_showOnTop;
   QAction *_showFullScreen;
   QAction *_showSettings;
   QAction *_quit;
