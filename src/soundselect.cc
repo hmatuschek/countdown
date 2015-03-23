@@ -26,7 +26,7 @@ SoundSelect::SoundSelect(const SoundItemList &sounds, const QString &selectedSou
   setLayout(layout);
 
   QObject::connect(_play, SIGNAL(toggled(bool)), this, SLOT(onPlayToggled(bool)));
-  QObject::connect(_player, SIGNAL(playingChanged()), this, SLOT(onPlayerStopped()));
+  QObject::connect(_player, SIGNAL(playingChanged()), this, SLOT(onPlaybackChanged()));
 }
 
 
@@ -35,15 +35,13 @@ SoundSelect::onPlayToggled(bool play) {
   if (play) {
     _player->setSource(QUrl::fromLocalFile(selectedSound()));
     _player->play();
-    _play->setText(tr("stop"));
   } else {
     _player->stop();
-    _play->setText(tr("play"));
   }
 }
 
 void
-SoundSelect::onPlayerStopped() {
+SoundSelect::onPlaybackChanged() {
   if (_player->isPlaying()) {
     _play->setText(tr("stop"));
     _play->setChecked(true);

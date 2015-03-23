@@ -10,6 +10,7 @@
 #include "soundselect.hh"
 
 
+/** The settings dialog. */
 class SettingsDialog : public QDialog
 {
   Q_OBJECT

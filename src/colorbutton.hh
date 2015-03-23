@@ -3,6 +3,7 @@
 
 #include <QPushButton>
 
+/** A simple color picker button. */
 class ColorButton : public QPushButton
 {
   Q_OBJECT

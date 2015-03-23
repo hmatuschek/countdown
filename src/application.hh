@@ -3,10 +3,15 @@
 
 #include <QApplication>
 #include <QAction>
+#include <QActionGroup>
 #include <QSettings>
 #include <QTimer>
 #include <QString>
 #include <QSoundEffect>
+
+
+// Forward declaration
+class MainWindow;
 
 
 class Application : public QApplication
@@ -45,9 +50,10 @@ public:
   QString lastMinutesSound();
   void setLastMinutesSound(const QString &file);
 
+  bool isClockHidden();
+  void setClockHidden(bool hidden);
+
 public:
-  QAction *actShowFullScreen();
-  QAction *actQuit();
   QMenu   *menu();
 
 public slots:
@@ -59,16 +65,24 @@ signals:
 
 protected slots:
   void onUpdateTimeLeft();
+  void onClockVisibilityChanged(QAction *action);
   void onShowSettings();
+  void onQuit();
 
 protected:
   QSettings _settings;
+
+  MainWindow *_mainWindow;
+
   bool _running;
   int  _timeLeft;
   QTimer _timer;
 
   QMenu   *_menu;
   QAction *_startStop;
+  QActionGroup *_display;
+  QAction *_hideClock;
+  QAction *_showNormal;
   QAction *_showFullScreen;
   QAction *_showSettings;
   QAction *_quit;

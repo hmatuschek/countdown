@@ -13,9 +13,6 @@ class MainWindow : public QMainWindow
 public:
   explicit MainWindow(Application &app);
 
-protected slots:
-  void onToggleFullScreen(bool full);
-
 protected:
   Application &_app;
   Countdown *_countdown;

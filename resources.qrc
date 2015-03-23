@@ -6,5 +6,9 @@
         <file>sounds/mono_bell.wav</file>
         <file>sounds/school_bell.wav</file>
         <file>sounds/single_chime.wav</file>
+        <file>icons/icon16.png</file>
+        <file>icons/icon32.png</file>
+        <file>icons/icon64.png</file>
+        <file>icons/icon256.png</file>
     </qresource>
 </RCC>

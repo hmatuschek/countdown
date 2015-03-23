@@ -1,5 +1,6 @@
 #include "application.hh"
 #include "settingsdialog.hh"
+#include "mainwindow.hh"
 #include <QMenu>
 
 
@@ -7,6 +8,8 @@ Application::Application(int &argc, char *argv[]) :
   QApplication(argc, argv),
   _settings("com.github.hmatuschek", "Countdown"), _timer(), _menu(0)
 {
+  setWindowIcon(QIcon("://icons/icon32.png"));
+
   _running = false;
   _timeLeft = 10*duration();
 
@@ -18,9 +21,22 @@ Application::Application(int &argc, char *argv[]) :
   _startStop = new QAction(tr("Start"), this);
   _startStop->setCheckable(true);
   _startStop->setChecked(false);
+
+  _hideClock = new QAction(tr("Hide"), this);
+  _hideClock->setCheckable(true);
+  _hideClock->setChecked(isClockHidden());
+  _showNormal = new QAction(tr("Normal"), this);
+  _showNormal->setCheckable(true);
+  _showNormal->setChecked(! isClockHidden());
   _showFullScreen = new QAction(tr("Full screen"), this);
   _showFullScreen->setCheckable(true);
   _showFullScreen->setChecked(false);
+  _display = new QActionGroup(this);
+  _display->setExclusive(true);
+  _display->addAction(_hideClock);
+  _display->addAction(_showNormal);
+  _display->addAction(_showFullScreen);
+
   _showSettings = new QAction(tr("Settings..."), this);
   _quit  = new QAction(tr("Quit"), this);
 
@@ -39,6 +55,16 @@ Application::Application(int &argc, char *argv[]) :
   QObject::connect(_startStop, SIGNAL(toggled(bool)), this, SLOT(startTimer(bool)));
   QObject::connect(&_timer, SIGNAL(timeout()), this, SLOT(onUpdateTimeLeft()));
   QObject::connect(_showSettings, SIGNAL(triggered()), this, SLOT(onShowSettings()));
+  QObject::connect(_display, SIGNAL(triggered(QAction*)),
+                   this, SLOT(onClockVisibilityChanged(QAction*)));
+  QObject::connect(_quit, SIGNAL(triggered()), this, SLOT(onQuit()));
+
+  _mainWindow = new MainWindow(*this);
+  if (isClockHidden()) {
+    _mainWindow->setVisible(false);
+  } else {
+    _mainWindow->show();
+  }
 }
 
 int
@@ -148,23 +174,32 @@ Application::setLastMinutesSound(const QString &file) {
   return _settings.setValue("lastMinutesSound", file);
 }
 
+bool
+Application::isClockHidden() {
+  return _settings.value("clockHidden", true).toBool();
+}
+
+void
+Application::setClockHidden(bool hidden) {
+  _settings.setValue("clockHidden", hidden);
+}
 
 QMenu   *Application::menu() {
   if (0 == _menu) {
     // Assemble Menu
     _menu = new QMenu();
     _menu->addAction(_startStop);
-    _menu->addSeparator();
-    _menu->addAction(_showFullScreen);
     _menu->addAction(_showSettings);
+    _menu->addSeparator();
+    _menu->addSection(tr("Visibility"));
+    _menu->addAction(_hideClock);
+    _menu->addAction(_showNormal);
+    _menu->addAction(_showFullScreen);
     _menu->addSeparator();
     _menu->addAction(_quit);
   }
   return _menu;
 }
-
-QAction *Application::actShowFullScreen() { return _showFullScreen; }
-QAction *Application::actQuit() { return _quit; }
 
 
 void
@@ -195,6 +230,28 @@ Application::onUpdateTimeLeft()
     _lmSound->play();
   }
   emit updateClock();
+}
+
+
+void
+Application::onClockVisibilityChanged(QAction *action) {
+  if (_hideClock == action) {
+    _mainWindow->showNormal();
+    _mainWindow->hide();
+    setClockHidden(true);
+  } else if (_showNormal == action) {
+    _mainWindow->showNormal();
+    _mainWindow->activateWindow();
+    setClockHidden(false);
+  } else if (_showFullScreen == action) {
+    _mainWindow->showFullScreen();
+    setClockHidden(false);
+  }
+}
+
+void
+Application::onQuit() {
+  _mainWindow->close();
 }
 
 void

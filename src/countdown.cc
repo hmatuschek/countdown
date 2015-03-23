@@ -27,10 +27,6 @@ Countdown::Countdown(Application &app, QWidget *parent)
 }
 
 
-Countdown::~Countdown() {
-  // pass...
-}
-
 void
 Countdown::updateTicks() {
   /* Compute Ticks. */
@@ -45,10 +41,12 @@ Countdown::updateTicks() {
   }
 }
 
+
 void
 Countdown::showMenu(const QPoint &pos) {
   _app.menu()->popup(mapToGlobal(pos));
 }
+
 
 void
 Countdown::mouseReleaseEvent(QMouseEvent *evt) {
@@ -62,6 +60,7 @@ Countdown::mouseReleaseEvent(QMouseEvent *evt) {
     }
   }
 }
+
 
 void
 Countdown::mouseMoveEvent(QMouseEvent *evt) {
@@ -77,6 +76,7 @@ Countdown::mouseMoveEvent(QMouseEvent *evt) {
     }
   }
 }
+
 
 void
 Countdown::paintEvent(QPaintEvent *evt)

@@ -1,6 +1,7 @@
 #include "colorbutton.hh"
 #include <QPainter>
 #include <QColorDialog>
+#include "mainwindow.hh"
 
 ColorButton::ColorButton(const QColor &color, QWidget *parent)
   : QPushButton(parent), _color(color)
