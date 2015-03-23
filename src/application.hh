@@ -31,9 +31,8 @@ public:
 
 public:
   QAction *actShowFullScreen();
-  QAction *actStartStop();
-  QAction *actShowSettings();
   QAction *actQuit();
+  QMenu   *menu();
 
 signals:
   void updateClock();
@@ -49,9 +48,11 @@ protected:
   int  _timeLeft;
   QTimer _timer;
 
-  QAction *_showFullScreen;
+  QMenu   *_menu;
   QAction *_startStop;
-  QAction *_showSettings;
+  QAction *_showFullScreen;
+  QAction *_durationSettings;
+  QAction *_lastMinutesSettings;
   QAction *_quit;
 };
 

@@ -13,15 +13,6 @@
 Countdown::Countdown(Application &app, QWidget *parent)
   : QWidget(parent), _app(app)
 {
-  // Assemble Menu
-  _menu = new QMenu();
-  _menu->addAction(app.actStartStop());
-  _menu->addSeparator();
-  _menu->addAction(app.actShowFullScreen());
-  _menu->addAction(app.actShowSettings());
-  _menu->addSeparator();
-  _menu->addAction(app.actQuit());
-
   updateTicks();
 
   setContextMenuPolicy(Qt::CustomContextMenu);
@@ -52,7 +43,7 @@ Countdown::updateTicks() {
 
 void
 Countdown::showMenu(const QPoint &pos) {
-  _menu->popup(mapToGlobal(pos));
+  _app.menu()->popup(mapToGlobal(pos));
 }
 
 void
@@ -65,6 +56,8 @@ Countdown::paintEvent(QPaintEvent *evt)
 {
   QPainter painter(this);
   painter.setRenderHint(QPainter::Antialiasing);
+
+  painter.fillRect(rect(), "white");
 
   float side = qMin(width(), height());
   painter.translate(width()/2, height()/2);

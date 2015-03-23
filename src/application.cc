@@ -1,8 +1,10 @@
 #include "application.hh"
+#include <QMenu>
+
 
 Application::Application(int argc, char *argv[]) :
-  QApplication(argc, argv), _settings("com.github.hmatuschek", "Countdown"),
-  _timer()
+  QApplication(argc, argv),
+  _settings("com.github.hmatuschek", "Countdown"), _timer()
 {
   _running = false;
   _timeLeft = 10*duration();
@@ -11,16 +13,25 @@ Application::Application(int argc, char *argv[]) :
   _timer.setInterval(6000);
   _timer.setSingleShot(false);
 
-  _showFullScreen = new QAction(tr("Full screen"), this);
-  _showFullScreen->setCheckable(true);
-  _showFullScreen->setChecked(false);
-
-  _startStop = new QAction(tr("Start"), this);
+  _menu = new QMenu();
+  _startStop = _menu->addAction(tr("Start"));
   _startStop->setCheckable(true);
   _startStop->setChecked(false);
 
-  _showSettings = new QAction(tr("Settings"), this);
-  _quit  = new QAction(tr("Quit"), this);
+  _menu->addSeparator();
+
+  _showFullScreen = _menu->addAction(tr("Full screen"));
+  _showFullScreen->setCheckable(true);
+  _showFullScreen->setChecked(false);
+
+  QMenu *settings = new QMenu(tr("Settings"), _menu);
+  _durationSettings = settings->addAction(tr("Duration: %1 min").arg(duration()));
+  _lastMinutesSettings = settings->addAction(tr("Last minutes: %1 min").arg(lastMinutes()));
+  _menu->addMenu(settings);
+  _menu->addSeparator();
+
+  _quit  = _menu->addAction(tr("Quit"));
+
 
   QObject::connect(_startStop, SIGNAL(toggled(bool)), this, SLOT(onStartStop(bool)));
   QObject::connect(&_timer, SIGNAL(timeout()), this, SLOT(onUpdateTimeLeft()));
@@ -84,9 +95,8 @@ Application::isInLastMinutes() {
 }
 
 
+QMenu   *Application::menu() { return _menu; }
 QAction *Application::actShowFullScreen() { return _showFullScreen; }
-QAction *Application::actStartStop() { return _startStop; }
-QAction *Application::actShowSettings() { return _showSettings; }
 QAction *Application::actQuit() { return _quit; }
 
 
