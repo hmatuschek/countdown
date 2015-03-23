@@ -1,4 +1,5 @@
 #include "application.hh"
+#include <QSound>
 
 Application::Application(int argc, char *argv[]) :
   QApplication(argc, argv), _settings("com.github.hmatuschek", "Countdown"),
@@ -83,6 +84,26 @@ Application::isInLastMinutes() {
   return _running && (0 != _timeLeft) && (_timeLeft/10 <= lastMinutes());
 }
 
+QString
+Application::endSound() {
+  return _settings.value("endSound").toString();
+}
+
+void
+Application::setEndSound(const QString &file) {
+  return _settings.setValue("endSound", file);
+}
+
+QString
+Application::lastMinutesSound() {
+  return _settings.value("lastMinutesSound").toString();
+}
+
+void
+Application::setLastMinutesSound(const QString &file) {
+  return _settings.setValue("lastMinutesSound", file);
+}
+
 
 QAction *Application::actShowFullScreen() { return _showFullScreen; }
 QAction *Application::actStartStop() { return _startStop; }
@@ -110,9 +131,9 @@ Application::onUpdateTimeLeft()
   _timeLeft--;
 
   if (0 == _timeLeft) {
-    // Signal End
+    QSound::play(endSound());
   } else if (lastMinutes() == (_timeLeft/10)) {
-    // Signal last minutes
+    QSound::play(lastMinutesSound());
   }
   emit updateClock();
 }

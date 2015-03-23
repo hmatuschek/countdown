@@ -5,6 +5,7 @@
 #include <QAction>
 #include <QSettings>
 #include <QTimer>
+#include <QString>
 
 
 class Application : public QApplication
@@ -28,6 +29,12 @@ public:
   void setShowTimeLeft(bool show);
 
   bool isInLastMinutes();
+
+  QString endSound();
+  void setEndSound(const QString &file);
+
+  QString lastMinutesSound();
+  void setLastMinutesSound(const QString &file);
 
 public:
   QAction *actShowFullScreen();

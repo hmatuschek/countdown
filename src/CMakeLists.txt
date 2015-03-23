@@ -5,8 +5,9 @@ set(timer_MOC_HEADERS
 set(timer_HEADERS ${plot232_MOC_HEADERS})
 
 qt5_wrap_cpp(timer_MOC_SOURCES ${timer_MOC_HEADERS})
+qt5_add_resources(timer_RCC_SOURCES ../resources.qrc)
 
-add_executable(timer ${timer_SOURCES} ${timer_MOC_SOURCES})
+add_executable(timer ${timer_SOURCES} ${timer_MOC_SOURCES} ${timer_RCC_SOURCES})
 target_link_libraries(timer ${LIBS})
 
 install(TARGETS timer DESTINATION bin)
