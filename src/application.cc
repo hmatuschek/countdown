@@ -4,10 +4,13 @@
 #include <QMenu>
 #include <QFileInfo>
 
-Application::Application(int &argc, char *argv[]) :
-  QApplication(argc, argv),
-  _settings("com.github.hmatuschek", "Countdown"), _timer(), _menu(0)
+Application::Application(int &argc, char *argv[])
+  : QApplication(argc, argv), _settings("com.github.hmatuschek", "Countdown"),
+    _translator(), _timer(), _menu(0)
 {
+  _translator.load("://i18n/countdown.qm");
+  this->installTranslator(&_translator);
+
   setWindowIcon(QIcon("://icons/icon32.png"));
 
   _timerState = STOPPED;
@@ -41,7 +44,7 @@ Application::Application(int &argc, char *argv[]) :
   _clockDisplay->addAction(_showOnTop);
   _clockDisplay->addAction(_showFullScreen);
 
-  _showSettings = new QAction(tr("Settings..."), this);
+  _showSettings = new QAction(tr("Settings ..."), this);
   _quit  = new QAction(tr("Quit"), this);
 
   // create list of known sounds

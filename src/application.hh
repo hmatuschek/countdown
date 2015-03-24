@@ -10,6 +10,7 @@
 #include <QSoundEffect>
 #include <QPair>
 #include <QSystemTrayIcon>
+#include <QTranslator>
 
 // Forward declaration
 class MainWindow;
@@ -103,6 +104,7 @@ protected slots:
 
 protected:
   QSettings _settings;
+  QTranslator _translator;
 
   MainWindow *_mainWindow;
   QSystemTrayIcon *_trayIcon;

@@ -7,6 +7,7 @@ include(InstallHeadersWithDirectory)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Multimedia REQUIRED)
+find_package(Qt5LinguistTools REQUIRED)
 
 ADD_DEFINITIONS(${Qt5Widgets_DEFINITIONS})
 

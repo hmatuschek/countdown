@@ -19,4 +19,7 @@
         <file>icons/icon_stopped32.png</file>
         <file>icons/icon_stopped64.png</file>
     </qresource>
+    <qresource lang="de_DE" prefix="/i18n">
+        <file alias="countdown.qm">i18n/countdown_de_DE.qm</file>
+    </qresource>
 </RCC>
