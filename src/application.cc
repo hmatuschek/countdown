@@ -65,8 +65,7 @@ Application::Application(int &argc, char *argv[]) :
   _endSound->setLoopCount(1);
 
   // Create main window
-  QWidget *dummy = new QWidget();
-  _mainWindow = new MainWindow(*this, dummy);
+  _mainWindow = new MainWindow(*this);
   setClockVisibility(NORMAL);
 
   // Create tray icon
@@ -137,28 +136,32 @@ Application::clockVisibility() const {
 void
 Application::setClockVisibility(ClockVisibility vis) {
   _clockVisibility = vis;
-  Qt::WindowFlags flags = _mainWindow->windowFlags();
+  Qt::WindowFlags flags;
   switch (_clockVisibility) {
   case HIDDEN:
-    _mainWindow->setWindowFlags(flags ^ (Qt::CustomizeWindowHint | Qt::WindowStaysOnTopHint));
     _mainWindow->showNormal();
+    flags = _mainWindow->windowFlags();
+    _mainWindow->setWindowFlags(flags & (! Qt::WindowStaysOnTopHint));
     _mainWindow->hide();
     _hideClock->setChecked(true);
     break;
   case NORMAL:
-    _mainWindow->setWindowFlags(flags ^ (Qt::CustomizeWindowHint | Qt::WindowStaysOnTopHint));
     _mainWindow->showNormal();
-    _mainWindow->activateWindow();
+    flags = _mainWindow->windowFlags();
+    _mainWindow->setWindowFlags(flags & (! Qt::WindowStaysOnTopHint));
+    _mainWindow->show();
     _showNormal->setChecked(true);
     break;
   case ONTOP:
-    _mainWindow->setWindowFlags(flags | (Qt::CustomizeWindowHint | Qt::WindowStaysOnTopHint));
     _mainWindow->showNormal();
-    _mainWindow->activateWindow();
+    flags = _mainWindow->windowFlags();
+    _mainWindow->setWindowFlags(flags | Qt::WindowStaysOnTopHint);
+    _mainWindow->show();
     _showOnTop->setChecked(true);
     break;
   case FULLSCREEN:
-    _mainWindow->setWindowFlags(flags ^ (Qt::CustomizeWindowHint | Qt::WindowStaysOnTopHint));
+    flags = _mainWindow->windowFlags();
+    _mainWindow->setWindowFlags(flags & (! Qt::WindowStaysOnTopHint));
     _mainWindow->showFullScreen();
     _showFullScreen->setChecked(true);
     break;
@@ -426,17 +429,6 @@ Application::onTimerPause() {
 
 void
 Application::onTrayIconActivated(QSystemTrayIcon::ActivationReason action) {
-  if (QSystemTrayIcon::Trigger == action) {
-    switch (timerState())  {
-    case STOPPED:
-    case PAUSED:
-      setTimerState(RUNNING);
-      break;
-    case RUNNING:
-      setTimerState(PAUSED);
-      break;
-    }
-  }
 }
 
 void
