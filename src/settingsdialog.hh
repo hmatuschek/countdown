@@ -30,6 +30,7 @@ public:
   inline const QColor &timeColor() const { return _timeColor->color(); }
   inline const QColor &lastMinutesColor() const { return _lmColor->color(); }
 
+  inline bool clockWise() const { return _clockWise->isChecked(); }
   inline bool showTimeLeft() const { return _showTimeLeft->isChecked(); }
   inline bool showTicks() const { return _showTicks->isChecked(); }
 
@@ -51,6 +52,7 @@ protected:
   SoundSelect *_lmSound;
   ColorButton *_timeColor;
   ColorButton *_lmColor;
+  QCheckBox   *_clockWise;
   QCheckBox   *_showTimeLeft;
   QCheckBox   *_showTicks;
 };

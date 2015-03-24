@@ -64,6 +64,9 @@ public:
   bool showTicks(const QString &prof=QString());
   void setShowTicks(bool show, const QString &prof=QString());
 
+  bool clockWise(const QString &prof=QString());
+  void setClockWise(bool clockWise, const QString &prof=QString());
+
   QColor timeColor(const QString &prof=QString());
   void setTimeColor(const QColor &color, const QString &prof=QString());
   QColor lastMinutesColor(const QString &prof=QString());

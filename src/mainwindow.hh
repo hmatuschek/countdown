@@ -11,7 +11,7 @@ class MainWindow : public QMainWindow
   Q_OBJECT
 
 public:
-  explicit MainWindow(Application &app);
+  explicit MainWindow(Application &app, QWidget *parent=0);
 
   void closeEvent(QCloseEvent *evt);
 

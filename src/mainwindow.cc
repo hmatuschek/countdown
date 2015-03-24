@@ -2,8 +2,8 @@
 #include <QCloseEvent>
 
 
-MainWindow::MainWindow(Application &app)
-  : QMainWindow(), _app(app)
+MainWindow::MainWindow(Application &app, QWidget *parent)
+  : QMainWindow(parent), _app(app)
 {
   setWindowTitle(tr("Countdown"));
   setWindowIcon(QIcon("://icons/icon32.png"));

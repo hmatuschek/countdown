@@ -3,7 +3,6 @@
 #include "mainwindow.hh"
 #include <QMenu>
 #include <QFileInfo>
-#include <QDebug>
 
 Application::Application(int &argc, char *argv[]) :
   QApplication(argc, argv),
@@ -67,7 +66,8 @@ Application::Application(int &argc, char *argv[]) :
   _endSound->setLoopCount(1);
 
   // Create main window
-  _mainWindow = new MainWindow(*this);
+  QWidget *dummy = new QWidget();
+  _mainWindow = new MainWindow(*this, dummy);
   setClockVisibility(NORMAL);
 
   QObject::connect(_startStop, SIGNAL(triggered()), this, SLOT(onTimerStart()));
@@ -212,7 +212,6 @@ Application::profile() {
 
 void
 Application::setProfile(const QString &profile) {
-  //qDebug() << "Set profile to" << profile;
   if (! hasProfile(profile)) { addProfile(profile); }
   _settings.setValue("profile", profile);
 }
@@ -220,7 +219,7 @@ Application::setProfile(const QString &profile) {
 int
 Application::duration(const QString &prof) {
   QString profile = prof;
-  if (profile.isEmpty()) { profile = this->profile(); }
+  if (profile.isNull()) { profile = this->profile(); }
   return _settings.value(QString("%1/duration").arg(profile), 45).toInt();
 }
 
@@ -228,8 +227,8 @@ void
 Application::setDuration(int dur, const QString &prof) {
   dur = std::max(0, dur);
   QString profile = prof;
-  if (profile.isEmpty()) { profile = this->profile(); }
-  _settings.setValue(QString("%1/duration").arg(profile), std::max(0, dur));
+  if (profile.isNull()) { profile = this->profile(); }
+  _settings.setValue(QString("%1/duration").arg(profile), dur);
 
   _timeLeft = std::min(10*dur, _timeLeft);
   emit durationChanged();
@@ -239,7 +238,7 @@ Application::setDuration(int dur, const QString &prof) {
 int
 Application::lastMinutes(const QString &prof) {
   QString profile = prof;
-  if (profile.isEmpty()) { profile = this->profile(); }
+  if (profile.isNull()) { profile = this->profile(); }
   return _settings.value(QString("%1/lastMinutes").arg(profile), 5).toInt();
 }
 
@@ -247,21 +246,21 @@ void
 Application::setLastMinutes(int N, const QString &prof) {
   N = std::max(0, N);
   QString profile = prof;
-  if (profile.isEmpty()) { profile = this->profile(); }
+  if (profile.isNull()) { profile = this->profile(); }
   _settings.setValue(QString("%1/lastMinutes").arg(profile), N);
 }
 
 bool
 Application::showTimeLeft(const QString &prof) {
   QString profile = prof;
-  if (profile.isEmpty()) { profile = this->profile(); }
+  if (profile.isNull()) { profile = this->profile(); }
   return _settings.value(QString("%1/showTimeLeft").arg(profile), true).toBool();
 }
 
 void
 Application::setShowTimeLeft(bool show, const QString &prof) {
   QString profile = prof;
-  if (profile.isEmpty()) { profile = this->profile(); }
+  if (profile.isNull()) { profile = this->profile(); }
   return _settings.setValue(QString("%1/showTimeLeft").arg(profile), show);
   emit updateClock();
 }
@@ -269,21 +268,35 @@ Application::setShowTimeLeft(bool show, const QString &prof) {
 bool
 Application::showTicks(const QString &prof) {
   QString profile = prof;
-  if (profile.isEmpty()) { profile = this->profile(); }
+  if (profile.isNull()) { profile = this->profile(); }
   return _settings.value(QString("%1/showTicks").arg(profile), true).toBool();
 }
 
 void
 Application::setShowTicks(bool show, const QString &prof) {
   QString profile = prof;
-  if (profile.isEmpty()) { profile = this->profile(); }
+  if (profile.isNull()) { profile = this->profile(); }
   _settings.setValue(QString("%1/showTicks").arg(profile), show);
+}
+
+bool
+Application::clockWise(const QString &prof) {
+  QString profile = prof;
+  if (profile.isNull()) { profile = this->profile(); }
+  return _settings.value(QString("%1/clockWise").arg(profile), true).toBool();
+}
+
+void
+Application::setClockWise(bool clockWise, const QString &prof) {
+  QString profile = prof;
+  if (profile.isNull()) { profile = this->profile(); }
+  _settings.setValue(QString("%1/clockWise").arg(profile), clockWise);
 }
 
 QColor
 Application::timeColor(const QString &prof) {
   QString profile = prof;
-  if (profile.isEmpty()) { profile = this->profile(); }
+  if (profile.isNull()) { profile = this->profile(); }
   return _settings.value(QString("%1/timeColor").arg(profile),
                          QColor("blue")).value<QColor>();
 }
@@ -291,14 +304,14 @@ Application::timeColor(const QString &prof) {
 void
 Application::setTimeColor(const QColor &color, const QString &prof) {
   QString profile = prof;
-  if (profile.isEmpty()) { profile = this->profile(); }
+  if (profile.isNull()) { profile = this->profile(); }
   _settings.setValue(QString("%1/timeColor").arg(profile), color);
 }
 
 QColor
 Application::lastMinutesColor(const QString &prof) {
   QString profile = prof;
-  if (profile.isEmpty()) { profile = this->profile(); }
+  if (profile.isNull()) { profile = this->profile(); }
   return _settings.value(QString("%1/lastMinutesColor").arg(profile),
                          QColor("red")).value<QColor>();
 }
@@ -306,7 +319,7 @@ Application::lastMinutesColor(const QString &prof) {
 void
 Application::setLastMinutesColor(const QColor &color, const QString &prof) {
   QString profile = prof;
-  if (profile.isEmpty()) { profile = this->profile(); }
+  if (profile.isNull()) { profile = this->profile(); }
   return _settings.setValue(QString("%1/lastMinutesColor").arg(profile), color);
 }
 
@@ -341,29 +354,29 @@ Application::addSoundItem(const QString &filename) {
 QString
 Application::endSound(const QString &prof) {
   QString profile = prof;
-  if (profile.isEmpty()) { profile = this->profile(); }
+  if (profile.isNull()) { profile = this->profile(); }
   return _settings.value(QString("%1/endSound").arg(profile)).toString();
 }
 
 void
 Application::setEndSound(const QString &file, const QString &prof) {
   QString profile = prof;
-  if (profile.isEmpty()) { profile = this->profile(); }
-  return _settings.setValue(QString("%1/endSound").arg(profile), file);
+  if (profile.isNull()) { profile = this->profile(); }
+  _settings.setValue(QString("%1/endSound").arg(profile), file);
 }
 
 QString
 Application::lastMinutesSound(const QString &prof) {
   QString profile = prof;
-  if (profile.isEmpty()) { profile = this->profile(); }
+  if (profile.isNull()) { profile = this->profile(); }
   return _settings.value(QString("%1/lastMinutesSound").arg(profile)).toString();
 }
 
 void
 Application::setLastMinutesSound(const QString &file, const QString &prof) {
   QString profile = prof;
-  if (profile.isEmpty()) { profile = this->profile(); }
-  return _settings.setValue(QString("%1/lastMinutesSound").arg(profile), file);
+  if (profile.isNull()) { profile = this->profile(); }
+  _settings.setValue(QString("%1/lastMinutesSound").arg(profile), file);
 }
 
 
@@ -452,6 +465,7 @@ Application::onShowSettings() {
   setShowTicks(dialog.showTicks());
   setShowTimeLeft(dialog.showTimeLeft());
 
+  setClockWise(dialog.clockWise());
   setDuration(dialog.duration());
   setLastMinutes(dialog.lastMinutes());
 }

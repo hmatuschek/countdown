@@ -28,7 +28,7 @@ SettingsDialog::SettingsDialog(Application &app, QWidget *parent)
   QHBoxLayout *profLayout = new QHBoxLayout();
   QPushButton *addProf = new QPushButton(tr("+"));
   QPushButton *remProf = new QPushButton(tr("-"));
-  profLayout->addWidget(new QLabel(tr("Profile")), 1);
+  profLayout->addWidget(new QLabel(tr("Profile")));
   profLayout->addWidget(_profiles, 1);
   profLayout->addWidget(addProf);
   profLayout->addWidget(remProf);
@@ -65,6 +65,8 @@ SettingsDialog::SettingsDialog(Application &app, QWidget *parent)
   QFormLayout *displayLayout = new QFormLayout();
   _timeColor = new ColorButton(_app.timeColor());
   _lmColor   = new ColorButton(_app.lastMinutesColor());
+  _clockWise = new QCheckBox();
+  _clockWise->setChecked(_app.clockWise());
   _showTimeLeft = new QCheckBox();
   _showTimeLeft->setChecked(_app.showTimeLeft());
   _showTicks = new QCheckBox();
@@ -72,6 +74,7 @@ SettingsDialog::SettingsDialog(Application &app, QWidget *parent)
 
   displayLayout->addRow(tr("Default color"), _timeColor);
   displayLayout->addRow(tr("Last minutes color"), _lmColor);
+  displayLayout->addRow(tr("Clockwise"), _clockWise);
   displayLayout->addRow(tr("Show time left"), _showTimeLeft);
   displayLayout->addRow(tr("Show time ticks"), _showTicks);
   displayPage->setLayout(displayLayout);
@@ -103,8 +106,9 @@ SettingsDialog::onProfileSelected(int idx) {
   _endSound->selectSound(_app.endSound(profile));
   _timeColor->setColor(_app.timeColor(profile));
   _lmColor->setColor(_app.lastMinutesColor(profile));
-  _showTimeLeft->setCheckState(_app.showTimeLeft(profile) ? Qt::Checked : Qt::Unchecked);
-  _showTicks->setCheckState(_app.showTicks(profile) ? Qt::Checked : Qt::Unchecked);
+  _clockWise->setChecked(_app.clockWise(profile));
+  _showTimeLeft->setChecked(_app.showTimeLeft(profile));
+  _showTicks->setChecked(_app.showTicks(profile));
 }
 
 void

@@ -8,7 +8,6 @@
 #include <QMouseEvent>
 #include <QString>
 #include <QFontMetrics>
-#include <QDebug>
 
 
 Countdown::Countdown(Application &app, QWidget *parent)
@@ -101,6 +100,7 @@ Countdown::paintEvent(QPaintEvent *evt)
   }
 
   int angle = (16*360.*_app.ticksLeft())/(10*_app.duration());
+  if (! _app.clockWise()) { angle = -angle; }
   painter.drawPie(QRectF(-90,-90,180,180), 16*90, angle);
 
   // Update pen to draw ticks and center dot
