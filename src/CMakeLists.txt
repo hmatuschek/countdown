@@ -1,13 +1,13 @@
-set(timer_SOURCES main.cc
+set(countdown_SOURCES main.cc
     countdown.cc application.cc mainwindow.cc settingsdialog.cc colorbutton.cc soundselect.cc)
-set(timer_MOC_HEADERS
+set(countdown_MOC_HEADERS
     countdown.hh application.hh mainwindow.hh settingsdialog.hh colorbutton.hh soundselect.hh)
-set(timer_HEADERS ${plot232_MOC_HEADERS})
+set(countdown_HEADERS ${countdown_MOC_HEADERS})
 
-qt5_wrap_cpp(timer_MOC_SOURCES ${timer_MOC_HEADERS})
-qt5_add_resources(timer_RCC_SOURCES ../resources.qrc)
+qt5_wrap_cpp(countdown_MOC_SOURCES ${countdown_MOC_HEADERS})
+qt5_add_resources(countdown_RCC_SOURCES ../resources.qrc)
 
-add_executable(timer ${timer_SOURCES} ${timer_MOC_SOURCES} ${timer_RCC_SOURCES})
-target_link_libraries(timer ${LIBS})
+add_executable(countdown ${countdown_SOURCES} ${countdown_MOC_SOURCES} ${countdown_RCC_SOURCES})
+target_link_libraries(countdown ${LIBS})
 
-install(TARGETS timer DESTINATION bin)
+install(TARGETS countdown DESTINATION bin)
