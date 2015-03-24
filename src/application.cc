@@ -17,7 +17,6 @@ Application::Application(int &argc, char *argv[]) :
   _timer.setInterval(6000);
   _timer.setSingleShot(false);
 
-
   // Assemble actions
   _startStop = new QAction(tr("Start"), this);
   _pause     = new QAction(tr("Pause"), this);
@@ -70,6 +69,12 @@ Application::Application(int &argc, char *argv[]) :
   _mainWindow = new MainWindow(*this, dummy);
   setClockVisibility(NORMAL);
 
+  // Create tray icon
+  _trayIcon = new QSystemTrayIcon();
+  _trayIcon->setIcon(QIcon("://icons/icon_stopped32.png"));
+  _trayIcon->setContextMenu(menu());
+  _trayIcon->show();
+
   QObject::connect(_startStop, SIGNAL(triggered()), this, SLOT(onTimerStart()));
   QObject::connect(_pause, SIGNAL(triggered()), this, SLOT(onTimerPause()));
   QObject::connect(&_timer, SIGNAL(timeout()), this, SLOT(onUpdateTimeLeft()));
@@ -77,6 +82,8 @@ Application::Application(int &argc, char *argv[]) :
   QObject::connect(_clockDisplay, SIGNAL(triggered(QAction*)),
                    this, SLOT(onClockVisibilityChanged(QAction*)));
   QObject::connect(_quit, SIGNAL(triggered()), this, SLOT(onQuit()));
+  QObject::connect(_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+                   this, SLOT(onTrayIconActivated(QSystemTrayIcon::ActivationReason)));
 
 }
 
@@ -94,17 +101,20 @@ Application::setTimerState(TimerState state) {
     _startStop->setText(tr("Stop"));
     _pause->setText(tr("Pause"));
     _timer.start();
+    _trayIcon->setIcon(QIcon("://icons/icon_run32.png"));
   } else if (STOPPED == _timerState) {
     _pause->setEnabled(false);
     _startStop->setText(tr("Start"));
     _pause->setText(tr("Pause"));
     _timer.stop();
     _timeLeft = 10*duration();
+    _trayIcon->setIcon(QIcon("://icons/icon_stopped32.png"));
   } else if (PAUSED == _timerState) {
     _pause->setEnabled(true);
     _startStop->setText(tr("Stop"));
     _pause->setText(tr("Resume"));
     _timer.stop();
+    _trayIcon->setIcon(QIcon("://icons/icon_pause32.png"));
   }
   emit updateClock();
 }
@@ -412,6 +422,21 @@ void
 Application::onTimerPause() {
   if (RUNNING == timerState()) { setTimerState(PAUSED); }
   else { setTimerState(RUNNING); }
+}
+
+void
+Application::onTrayIconActivated(QSystemTrayIcon::ActivationReason action) {
+  if (QSystemTrayIcon::Trigger == action) {
+    switch (timerState())  {
+    case STOPPED:
+    case PAUSED:
+      setTimerState(RUNNING);
+      break;
+    case RUNNING:
+      setTimerState(PAUSED);
+      break;
+    }
+  }
 }
 
 void

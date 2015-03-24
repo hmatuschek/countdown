@@ -9,6 +9,14 @@
         <file>icons/icon16.png</file>
         <file>icons/icon32.png</file>
         <file>icons/icon64.png</file>
-        <file>icons/icon256.png</file>
+        <file>icons/icon_pause16.png</file>
+        <file>icons/icon_pause32.png</file>
+        <file>icons/icon_pause64.png</file>
+        <file>icons/icon_run16.png</file>
+        <file>icons/icon_run32.png</file>
+        <file>icons/icon_run64.png</file>
+        <file>icons/icon_stopped16.png</file>
+        <file>icons/icon_stopped32.png</file>
+        <file>icons/icon_stopped64.png</file>
     </qresource>
 </RCC>

@@ -9,11 +9,6 @@ int main(int argc, char *argv[])
   Application app(argc,argv);
   app.setQuitOnLastWindowClosed(false);
 
-  QSystemTrayIcon trayIcon;
-  trayIcon.setIcon(QIcon("://icons/icon32.png"));
-  trayIcon.setContextMenu(app.menu());
-  trayIcon.show();
-
   app.exec();
 
   return 0;

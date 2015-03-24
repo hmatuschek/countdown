@@ -9,6 +9,7 @@
 #include <QString>
 #include <QSoundEffect>
 #include <QPair>
+#include <QSystemTrayIcon>
 
 // Forward declaration
 class MainWindow;
@@ -94,6 +95,7 @@ signals:
 protected slots:
   void onTimerStart();
   void onTimerPause();
+  void onTrayIconActivated(QSystemTrayIcon::ActivationReason action);
   void onUpdateTimeLeft();
   void onClockVisibilityChanged(QAction *action);
   void onShowSettings();
@@ -101,7 +103,9 @@ protected slots:
 
 protected:
   QSettings _settings;
+
   MainWindow *_mainWindow;
+  QSystemTrayIcon *_trayIcon;
 
   TimerState _timerState;
   int  _timeLeft;
