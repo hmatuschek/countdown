@@ -19,6 +19,8 @@ COPY "%LIB_PATH%/libgcc_s_dw2-1.dll" .
 COPY "%LIB_PATH%/libstdc++-6.dll" .
 MKDIR platforms
 COPY "%QT_PLUGIN_PATH%/platforms/qwindows.dll" platforms
+MKDIR audio
+COPY "%QT_PLUGIN_PATH%/audio/qtaudio_windows.dll" audio
 MKDIR imageformats 
 MKDIR iconengines
 

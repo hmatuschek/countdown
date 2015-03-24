@@ -41,6 +41,7 @@ section "install"
 	file "countdown.exe"
 	file "*.dll"
 	file /r "platforms"
+	file /r "audio"
 	#file /r "imageformats"
 	#file /r "iconengines"
 	# Add any other files for the install directory (license files, app data, etc) here
@@ -88,6 +89,8 @@ section "uninstall"
 	delete $INSTDIR\*.dll
 	delete $INSTDIR\platforms\*.dll
 	rmDir $INSTDIR\platforms
+	delete $INSTDIR\audio\*.dll
+	rmDir $INSTDIR\audio
 	#delete $INSTDIR\imageformats\*.dll
 	#rmDir $INSTDIR\imageformats
 	#delete $INSTDIR\iconengines\*.dll
