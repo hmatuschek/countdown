@@ -11,6 +11,7 @@ public:
   explicit ColorButton(const QColor &color, QWidget *parent = 0);
 
   inline const QColor &color() const { return _color; }
+  void setColor(const QColor &color);
 
 protected slots:
   void onSelectColor();

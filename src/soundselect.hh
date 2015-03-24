@@ -19,6 +19,8 @@ public:
   /** Returns the path to the selected sound. */
   inline QString selectedSound() { return _sounds->currentData().toString(); }
 
+  void selectSound(const QString &sound);
+
 protected slots:
   void onSoundSelected(int idx);
   /** Start/stops playback. */

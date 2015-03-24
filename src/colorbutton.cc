@@ -11,6 +11,11 @@ ColorButton::ColorButton(const QColor &color, QWidget *parent)
 }
 
 void
+ColorButton::setColor(const QColor &color) {
+  _color = color; update();
+}
+
+void
 ColorButton::paintEvent(QPaintEvent *evt) {
   QPushButton::paintEvent(evt);
   QPainter painter(this);
@@ -24,7 +29,7 @@ void
 ColorButton::onSelectColor() {
   QColorDialog dialog(_color);
   if (QDialog::Accepted != dialog.exec()) { return; }
-  _color = dialog.currentColor();
+  setColor(dialog.currentColor());
 }
 
 

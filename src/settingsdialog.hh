@@ -18,6 +18,9 @@ class SettingsDialog : public QDialog
 public:
   explicit SettingsDialog(Application &app, QWidget *parent = 0);
 
+  inline QString profile() { return _profiles->currentData().toString(); }
+  inline QStringList removedProfiles() { return _removedProfiles; }
+
   inline int duration() { return _duration->value(); }
   inline int lastMinutes() { return _lastMinutes->value(); }
 
@@ -30,8 +33,16 @@ public:
   inline bool showTimeLeft() const { return _showTimeLeft->isChecked(); }
   inline bool showTicks() const { return _showTicks->isChecked(); }
 
+
+protected slots:
+  void onProfileSelected(int idx);
+  void onAddProfile();
+  void onRemProfile();
+
 protected:
   Application &_app;
+  QComboBox *_profiles;
+  QStringList _removedProfiles;
   QSpinBox *_duration;
   QSpinBox *_lastMinutes;
   SoundSelect *_endSound;

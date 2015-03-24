@@ -157,6 +157,14 @@ Application::setClockVisibility(ClockVisibility vis) {
   }
 }
 
+QStringList
+Application::profiles() const {
+  /// @bug Implement
+  QStringList prfs;
+  //_settings.beginReadArray("profiles");
+  return prfs;
+}
+
 QString
 Application::profile() {
   return _settings.value("profile", "").toString();

@@ -41,6 +41,16 @@ SoundSelect::SoundSelect(const Application::SoundItemList &sounds,
 
 
 void
+SoundSelect::selectSound(const QString &sound) {
+  // Iterate through the items in the combobox
+  for (int i=1; i<_sounds->count(); i++) {
+    if (sound == _sounds->itemData(i)) {
+      _sounds->setCurrentIndex(i);
+    }
+  }
+}
+
+void
 SoundSelect::onPlayToggled(bool play) {
   if (play) {
     _player->setSource(QUrl::fromLocalFile(selectedSound()));

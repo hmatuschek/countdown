@@ -36,6 +36,7 @@ public:
 public:
   explicit Application(int &argc, char *argv[]);
 
+  QStringList profiles() const;
   QString profile();
   void setProfile(const QString &profile);
 
