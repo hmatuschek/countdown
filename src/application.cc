@@ -3,7 +3,7 @@
 #include "mainwindow.hh"
 #include <QMenu>
 #include <QFileInfo>
-
+#include <QDebug>
 
 Application::Application(int &argc, char *argv[]) :
   QApplication(argc, argv),
@@ -46,12 +46,6 @@ Application::Application(int &argc, char *argv[]) :
   _showSettings = new QAction(tr("Settings..."), this);
   _quit  = new QAction(tr("Quit"), this);
 
-  // Create main window
-  _mainWindow = new MainWindow(*this);
-  setClockVisibility(NORMAL);
-
-  /// @bug Create persistent settings dialog
-
   // create list of known sounds
   _sounds << QPair<QString,QString>(tr("Factory Bell"), "://sounds/bell_factory_break.wav")
       << QPair<QString,QString>(tr("Big Bell"), "://sounds/big_bell.wav")
@@ -71,6 +65,10 @@ Application::Application(int &argc, char *argv[]) :
     _endSound->setSource(QUrl::fromLocalFile(endSound()));
   }
   _endSound->setLoopCount(1);
+
+  // Create main window
+  _mainWindow = new MainWindow(*this);
+  setClockVisibility(NORMAL);
 
   QObject::connect(_startStop, SIGNAL(triggered()), this, SLOT(onTimerStart()));
   QObject::connect(_pause, SIGNAL(triggered()), this, SLOT(onTimerPause()));
@@ -158,20 +156,64 @@ Application::setClockVisibility(ClockVisibility vis) {
 }
 
 QStringList
-Application::profiles() const {
-  /// @bug Implement
+Application::profiles() {
   QStringList prfs;
-  //_settings.beginReadArray("profiles");
+  int N = _settings.beginReadArray("profiles");
+  for (int i=0; i<N; i++) {
+    _settings.setArrayIndex(i);
+    prfs.append(_settings.value("name").toString());
+  }
+  _settings.endArray();
+  //qDebug() << "Profiles:" << prfs;
   return prfs;
+}
+
+bool
+Application::hasProfile(const QString &name) {
+  if (name.isEmpty()) { return true; }
+  int N = _settings.beginReadArray("profiles");
+  for (int i=0; i<N; i++) {
+    _settings.setArrayIndex(i);
+    if (_settings.value("name").toString() == name) {
+      _settings.endArray();
+      //qDebug() << "Found profile:" << name;
+      return true;
+    }
+  }
+  _settings.endArray();
+  //qDebug() << "Profile" << name << "not found.";
+  return false;
+}
+
+void
+Application::addProfile(const QString &name) {
+  //qDebug() << "Add profile" << name;
+  QStringList prfs;
+  int N = _settings.beginReadArray("profiles");
+  for (int i=0; i<N; i++) {
+    _settings.setArrayIndex(i);
+    prfs.append(_settings.value("name").toString());
+  }
+  _settings.endArray();
+  prfs.append(name);
+  _settings.beginWriteArray("profiles");
+  for (int i=0; i<(N+1); i++) {
+    _settings.setArrayIndex(i);
+    _settings.setValue("name", prfs.at(i));
+  }
+  _settings.endArray();
 }
 
 QString
 Application::profile() {
-  return _settings.value("profile", "").toString();
+  //qDebug() << "Current profile" << _settings.value("profile").toString();
+  return _settings.value("profile").toString();
 }
 
 void
 Application::setProfile(const QString &profile) {
+  //qDebug() << "Set profile to" << profile;
+  if (! hasProfile(profile)) { addProfile(profile); }
   _settings.setValue("profile", profile);
 }
 
@@ -325,17 +367,19 @@ Application::setLastMinutesSound(const QString &file, const QString &prof) {
 }
 
 
-QMenu   *Application::menu() {
+QMenu
+*Application::menu() {
   if (0 == _menu) {
     // Assemble Menu
     _menu = new QMenu();
     _menu->addAction(_startStop);
     _menu->addAction(_pause);
     _menu->addSeparator();
-    _menu->addAction(_hideClock);
-    _menu->addAction(_showNormal);
-    _menu->addAction(_showOnTop);
-    _menu->addAction(_showFullScreen);
+    QMenu *viewMenu = _menu->addMenu(tr("View"));
+    viewMenu->addAction(_hideClock);
+    viewMenu->addAction(_showNormal);
+    viewMenu->addAction(_showOnTop);
+    viewMenu->addAction(_showFullScreen);
     _menu->addSeparator();
     _menu->addAction(_showSettings);
     _menu->addSeparator();
@@ -393,7 +437,11 @@ Application::onQuit() {
 void
 Application::onShowSettings() {
   SettingsDialog dialog(*this);
-  if (QDialog::Accepted != dialog.exec()) { return; }
+  if (QDialog::Accepted != dialog.exec()) {
+    return;
+  }
+
+  setProfile(dialog.profile());
 
   setEndSound(dialog.endSound());
   setLastMinutesSound(dialog.lastMinutesSound());
@@ -406,6 +454,4 @@ Application::onShowSettings() {
 
   setDuration(dialog.duration());
   setLastMinutes(dialog.lastMinutes());
-
-  dialog.hide();
 }

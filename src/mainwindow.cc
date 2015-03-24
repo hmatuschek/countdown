@@ -6,6 +6,7 @@ MainWindow::MainWindow(Application &app)
   : QMainWindow(), _app(app)
 {
   setWindowTitle(tr("Countdown"));
+  setWindowIcon(QIcon("://icons/icon32.png"));
 
   _countdown = new Countdown(_app);
   setCentralWidget(_countdown);

@@ -10,6 +10,7 @@
 #include <QPushButton>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QCloseEvent>
 
 
 
@@ -94,8 +95,8 @@ SettingsDialog::SettingsDialog(Application &app, QWidget *parent)
 
 void
 SettingsDialog::onProfileSelected(int idx) {
-  QString profile = _profiles->currentData().toString();
-  // Update dialog
+  QString profile = _profiles->itemData(idx).toString();
+  // Update dialog for selected profile
   _duration->setValue(_app.duration(profile));
   _lastMinutes->setValue(_app.lastMinutes(profile));
   _lmSound->selectSound(_app.lastMinutesSound(profile));
@@ -108,7 +109,8 @@ SettingsDialog::onProfileSelected(int idx) {
 
 void
 SettingsDialog::onAddProfile() {
-  QString name = QInputDialog::getText(0, tr("Select a profile name"), tr("Profile name"));
+  QString name = QInputDialog::getText(
+        0, tr("Select a profile name"), tr("Profile name")).simplified();
   if (name.isEmpty()) { return; }
   // Check if profile exists
   for (int i=1; i<_profiles->count(); i++) {
@@ -132,4 +134,9 @@ SettingsDialog::onRemProfile() {
   }
   _removedProfiles << _profiles->currentData().toString();
   _profiles->removeItem(_profiles->currentIndex());
+}
+
+void
+SettingsDialog::closeEvent(QCloseEvent *evt) {
+  hide(); evt->ignore();
 }

@@ -33,11 +33,13 @@ public:
   inline bool showTimeLeft() const { return _showTimeLeft->isChecked(); }
   inline bool showTicks() const { return _showTicks->isChecked(); }
 
-
 protected slots:
   void onProfileSelected(int idx);
   void onAddProfile();
   void onRemProfile();
+
+protected:
+  void closeEvent(QCloseEvent *evt);
 
 protected:
   Application &_app;

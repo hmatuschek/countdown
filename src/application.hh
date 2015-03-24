@@ -12,7 +12,7 @@
 
 // Forward declaration
 class MainWindow;
-
+class SettingsDialog;
 
 class Application : public QApplication
 {
@@ -36,7 +36,10 @@ public:
 public:
   explicit Application(int &argc, char *argv[]);
 
-  QStringList profiles() const;
+  QStringList profiles();
+  bool hasProfile(const QString &name);
+  void addProfile(const QString &name);
+
   QString profile();
   void setProfile(const QString &profile);
 
@@ -95,7 +98,6 @@ protected slots:
 
 protected:
   QSettings _settings;
-
   MainWindow *_mainWindow;
 
   TimerState _timerState;
