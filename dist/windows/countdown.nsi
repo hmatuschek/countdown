@@ -41,6 +41,7 @@ section "install"
 	file "countdown.exe"
 	file "*.dll"
 	file /r "platforms"
+	file "icon.ico"
 	#file /r "imageformats"
 	#file /r "iconengines"
 	# Add any other files for the install directory (license files, app data, etc) here
@@ -49,7 +50,7 @@ section "install"
 	writeUninstaller "$INSTDIR\uninstall.exe"
  
 	# Start Menu
-	createShortCut "$SMPROGRAMS\${APPNAME}.lnk" "$INSTDIR\countdown.exe" "" 
+	createShortCut "$SMPROGRAMS\${APPNAME}.lnk" "$INSTDIR\countdown.exe" "" "$INSTDIR\icon.ico" 
  
 	# Registry information for add/remove programs
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayName" "${APPNAME} - ${DESCRIPTION}"
@@ -85,6 +86,7 @@ section "uninstall"
  
 	# Remove files
 	delete $INSTDIR\countdown.exe
+	delete $INSTDIR\icon.ico
 	delete $INSTDIR\*.dll
 	delete $INSTDIR\platforms\*.dll
 	rmDir $INSTDIR\platforms
