@@ -14,7 +14,7 @@
         <location filename="../src/application.cc" line="104"/>
         <location filename="../src/application.cc" line="110"/>
         <source>Pause</source>
-        <translation>Pause</translation>
+        <translation>Anhalten</translation>
     </message>
     <message>
         <location filename="../src/application.cc" line="28"/>
@@ -89,7 +89,7 @@
     <message>
         <location filename="../src/application.cc" line="117"/>
         <source>Resume</source>
-        <translation>Vortsetzen</translation>
+        <translation>Fortsetzen</translation>
     </message>
     <message>
         <location filename="../src/application.cc" line="407"/>
@@ -145,7 +145,7 @@
     <message>
         <location filename="../src/settingsdialog.cc" line="58"/>
         <source>Last minutes sound</source>
-        <translation>&quot;Letzte Minuten&quot; Klanf</translation>
+        <translation>&quot;Letzte Minuten&quot; Klang</translation>
     </message>
     <message>
         <location filename="../src/settingsdialog.cc" line="59"/>
