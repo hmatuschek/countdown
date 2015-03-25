@@ -8,7 +8,7 @@ to display the remaining time to the students/pupils. It (optionally) plays a so
 color of the clock once the "last minutes", i.e. the last 5min of the exam starts. 
 
 The application itself resides in the system tray and the clock display can be hidden. This allows to
-use the timer for the [https://en.wikipedia.org/wiki/Pomodoro_Technique]("Pomodoro Technique").
+use the timer for the ["Pomodoro Technique"](https://en.wikipedia.org/wiki/Pomodoro_Technique).
 
 The timer configurations are organized in independent "profiles". This allows to store and apply 
 frequently used configurations easily.
@@ -25,7 +25,7 @@ frequently used configurations easily.
 # Download
 
 Windows and MacOS X binaries can be obtained from the 
-[https://github.com/hmatuschek/countdown/releases](releases) page. 
+[releases](https://github.com/hmatuschek/countdown/releases) page. 
 
 
 # Licence
