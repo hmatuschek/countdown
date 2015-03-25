@@ -2,6 +2,7 @@
 A very simple timer/count-down application. 
 
 <img src="http://i58.tinypic.com/5cdnc7.png" border="0">
+<img src="http://i57.tinypic.com/2m7d9qf.png" border="0">
 
 No one wears wristwatches anymore. Hence this application is intended for the use in tests and exams, 
 to display the remaining time to the students/pupils. It (optionally) plays a sound and changes the 
