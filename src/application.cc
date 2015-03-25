@@ -380,9 +380,15 @@ Application::endSound(const QString &prof) {
 
 void
 Application::setEndSound(const QString &file, const QString &prof) {
+  // Get profile
   QString profile = prof;
   if (profile.isNull()) { profile = this->profile(); }
+  // store sound
   _settings.setValue(QString("%1/endSound").arg(profile), file);
+  // update playback
+  if (! endSound().isEmpty()) {
+    _endSound->setSource(QUrl::fromLocalFile(endSound()));
+  }
 }
 
 QString
@@ -397,6 +403,9 @@ Application::setLastMinutesSound(const QString &file, const QString &prof) {
   QString profile = prof;
   if (profile.isNull()) { profile = this->profile(); }
   _settings.setValue(QString("%1/lastMinutesSound").arg(profile), file);
+  if (! lastMinutesSound().isEmpty()) {
+    _lmSound->setSource(QUrl::fromLocalFile(lastMinutesSound()));
+  }
 }
 
 
