@@ -8,6 +8,7 @@
 #include <QMouseEvent>
 #include <QString>
 #include <QFontMetrics>
+#include <QFont>
 
 
 Countdown::Countdown(Application &app, QWidget *parent)
@@ -110,7 +111,7 @@ Countdown::paintEvent(QPaintEvent *evt)
   // Draw center dot
   painter.drawEllipse(QPointF(0,0), 5,5);
 
-  // Draw ticks if enabled
+  // Draw ticks (if enabled)
   if (_app.showTicks()) {
     int Nticks = _ticks.size();
     for (float angle=0; angle<2*M_PI; angle+=2*M_PI/Nticks) {
@@ -120,8 +121,11 @@ Countdown::paintEvent(QPaintEvent *evt)
     }
   }
 
-  // Draw time left if enabled
+  // Draw time left (if enabled)
   if (_app.showTimeLeft()) {
+    QFont font = painter.font();
+    font.setPointSize(16);
+    painter.setFont(font);
     QString text = QString("%1 min").arg(_app.timeLeft());
     QRectF bb = painter.boundingRect(QRect(0,40,0,0), Qt::AlignCenter|Qt::AlignCenter, text);
     painter.drawText(bb, text, Qt::AlignCenter|Qt::AlignCenter);

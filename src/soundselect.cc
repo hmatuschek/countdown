@@ -14,7 +14,7 @@ SoundSelect::SoundSelect(const Application::SoundItemList &sounds,
   _player = new QSoundEffect(this);
 
   _sounds = new QComboBox();
-  _sounds->addItem(tr("Select file..."));
+  _sounds->addItem(tr("Select file ..."));
   _sounds->addItem(tr("<none>"));
   _sounds->setCurrentIndex(1);
   for (int i=0; i<sounds.size(); i++) {
@@ -74,8 +74,8 @@ SoundSelect::onPlaybackChanged() {
 void
 SoundSelect::onSoundSelected(int idx) {
   if (0 == idx) {
-    QString filename = QFileDialog::getOpenFileName(0, tr("Select a sound file"),
-                                                    "", tr("Sound Files (*.wav)"));
+    QString filename = QFileDialog::getOpenFileName(
+          0, tr("Select a sound file"), "", tr("Sound Files (*.wav)"));
     if (filename.isEmpty()) { _sounds->setCurrentIndex(1); }
     QFileInfo info(filename);
     _sounds->addItem(info.baseName(), info.canonicalFilePath());

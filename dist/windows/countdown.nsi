@@ -3,7 +3,7 @@
 !define DESCRIPTION "A simple timer/count-down application."
 # These three must be integers
 !define VERSIONMAJOR 1
-!define VERSIONMINOR 0
+!define VERSIONMINOR 1
 !define VERSIONBUILD 0
 
 RequestExecutionLevel admin ;Require admin rights on NT6+ (When UAC is turned on)
@@ -11,7 +11,7 @@ RequestExecutionLevel admin ;Require admin rights on NT6+ (When UAC is turned on
 InstallDir "$PROGRAMFILES\${APPNAME}"
 
 Name "${APPNAME}"
-outFile "countdown-1.0.0-setup.exe"
+outFile "countdown-${VERSIONMAJOR}.${VERSIONMINOR}.${VERSIONBUILD}-setup.exe"
 
 !include LogicLib.nsh
  

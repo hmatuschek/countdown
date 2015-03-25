@@ -20,6 +20,7 @@ SettingsDialog::SettingsDialog(Application &app, QWidget *parent)
   _profiles = new QComboBox();
   _profiles->addItem(tr("Default"), "");
   _profiles->setCurrentIndex(0);
+  _profiles->setToolTip(tr("Select a profile."));
   QStringList profiles = _app.profiles();
   for (int i=0; i<profiles.size(); i++) {
     _profiles->addItem(profiles.at(i), profiles.at(i));
@@ -27,7 +28,9 @@ SettingsDialog::SettingsDialog(Application &app, QWidget *parent)
   }
   QHBoxLayout *profLayout = new QHBoxLayout();
   QPushButton *addProf = new QPushButton(tr("+"));
+  addProf->setToolTip(tr("Create a new profile."));
   QPushButton *remProf = new QPushButton(tr("-"));
+  remProf->setToolTip(tr("Delete the selected profile."));
   profLayout->addWidget(new QLabel(tr("Profile")));
   profLayout->addWidget(_profiles, 1);
   profLayout->addWidget(addProf);
@@ -42,9 +45,13 @@ SettingsDialog::SettingsDialog(Application &app, QWidget *parent)
   _duration = new QSpinBox();
   _duration->setMinimum(1); _duration->setMaximum(1000);
   _duration->setValue(_app.duration());
+  _duration->setToolTip(tr("Set the overall duration of the timer."));
   _lastMinutes = new QSpinBox();
   _lastMinutes->setMinimum(0); _duration->setMaximum(1000);
   _lastMinutes->setValue(_app.lastMinutes());
+  _lastMinutes->setToolTip(tr("Specify the last minutes of the timer.\n"
+                              "The clock display will change the color "
+                              "for this timespan"));
   timerLayout->addRow(tr("Duration [min]"), _duration);
   timerLayout->addRow(tr("Last minutes"), _lastMinutes);
   timerPage->setLayout(timerLayout);
@@ -54,7 +61,11 @@ SettingsDialog::SettingsDialog(Application &app, QWidget *parent)
   QWidget *soundPage = new QWidget();
   QFormLayout *soundLayout = new QFormLayout();
   _lmSound = new SoundSelect(_app.soundItems(), _app.lastMinutesSound());
+  _lmSound->setToolTip(tr("Select the sound to be played when the last minutes starts.\n"
+                          "Select <none> to disable."));
   _endSound = new SoundSelect(_app.soundItems(), _app.endSound());
+  _endSound->setToolTip(tr("Select the sound to be played when the time is over.\n"
+                           "Select <none> to disable."));
   soundLayout->addRow(tr("Last minutes sound"), _lmSound);
   soundLayout->addRow(tr("End sound"), _endSound);
   soundPage->setLayout(soundLayout);
@@ -64,13 +75,18 @@ SettingsDialog::SettingsDialog(Application &app, QWidget *parent)
   QWidget *displayPage = new QWidget();
   QFormLayout *displayLayout = new QFormLayout();
   _timeColor = new ColorButton(_app.timeColor());
+  _timeColor->setToolTip(tr("Select the color for the clock."));
   _lmColor   = new ColorButton(_app.lastMinutesColor());
+  _lmColor->setToolTip(tr("Select the color for the clock when the last minutes starts."));
   _clockWise = new QCheckBox();
   _clockWise->setChecked(_app.clockWise());
+  _clockWise->setToolTip(tr("Specifies the clock direction."));
   _showTimeLeft = new QCheckBox();
   _showTimeLeft->setChecked(_app.showTimeLeft());
+  _showTimeLeft->setToolTip(tr("If selected, the remaining mintues are shown."));
   _showTicks = new QCheckBox();
   _showTicks->setChecked(_app.showTicks());
+  _showTicks->setToolTip(tr("If selected, the clock ticks are displayed."));
 
   displayLayout->addRow(tr("Default color"), _timeColor);
   displayLayout->addRow(tr("Last minutes color"), _lmColor);

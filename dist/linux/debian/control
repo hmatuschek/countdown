@@ -1,0 +1,14 @@
+Source: countdown
+Priority: extra
+Maintainer: Hannes Matuschek <hmatuschek@gmail.com>
+Build-Depends: cdbs (>= 0.4.51), dh-exec, debhelper (>= 9.0.0), cmake, qtbase5-dev (>= 5.0), qtmultimedia5-dev (>= 5.0)
+Standards-Version: 3.9.2
+Section: misc
+Homepage: http://github.com/hmatuschek/countdown
+
+Package: kochmorse
+Section: misc
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Countdown
+ A simple countdown and timer application.

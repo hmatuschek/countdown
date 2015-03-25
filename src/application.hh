@@ -100,6 +100,7 @@ protected slots:
   void onUpdateTimeLeft();
   void onClockVisibilityChanged(QAction *action);
   void onShowSettings();
+  void onAbout();
   void onQuit();
 
 protected:
@@ -117,6 +118,8 @@ protected:
   SoundItemList _sounds;
 
   QMenu   *_menu;
+  //QMenu   *_profileMenu;
+
   QAction *_startStop;
   QAction *_pause;
   QActionGroup *_clockDisplay;
@@ -125,6 +128,7 @@ protected:
   QAction *_showOnTop;
   QAction *_showFullScreen;
   QAction *_showSettings;
+  QAction *_about;
   QAction *_quit;
 
   QSoundEffect *_lmSound;

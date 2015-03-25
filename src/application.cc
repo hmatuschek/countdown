@@ -3,6 +3,8 @@
 #include "mainwindow.hh"
 #include <QMenu>
 #include <QFileInfo>
+#include <QMessageBox>
+
 
 Application::Application(int &argc, char *argv[])
   : QApplication(argc, argv), _settings("com.github.hmatuschek", "Countdown"),
@@ -45,6 +47,7 @@ Application::Application(int &argc, char *argv[])
   _clockDisplay->addAction(_showFullScreen);
 
   _showSettings = new QAction(tr("Settings ..."), this);
+  _about = new QAction(tr("About Countdown"), this);
   _quit  = new QAction(tr("Quit"), this);
 
   // create list of known sounds
@@ -83,6 +86,7 @@ Application::Application(int &argc, char *argv[])
   QObject::connect(_showSettings, SIGNAL(triggered()), this, SLOT(onShowSettings()));
   QObject::connect(_clockDisplay, SIGNAL(triggered(QAction*)),
                    this, SLOT(onClockVisibilityChanged(QAction*)));
+  QObject::connect(_about, SIGNAL(triggered()), this, SLOT(onAbout()));
   QObject::connect(_quit, SIGNAL(triggered()), this, SLOT(onQuit()));
   QObject::connect(_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
                    this, SLOT(onTrayIconActivated(QSystemTrayIcon::ActivationReason)));
@@ -412,6 +416,8 @@ QMenu
     _menu->addSeparator();
     _menu->addAction(_showSettings);
     _menu->addSeparator();
+    _menu->addAction(_about);
+    _menu->addSeparator();
     _menu->addAction(_quit);
   }
   return _menu;
@@ -463,7 +469,34 @@ Application::onClockVisibilityChanged(QAction *action) {
 }
 
 void
+Application::onAbout() {
+  QMessageBox::about(
+        0, tr("About Countdown"),
+        tr("<h2 align=\"center\">Countdown - version 1.1.0</h2>"
+           "<h4 align=\"center\">https://github.com/hmatuschek/countdown</h4>"
+           "<p align=\"center\">(c) 2015, by Hannes Matuschek <hmatuschek@gmail.com></p>"
+           "<p>This program is free software; you can redistribute it and/or modify it under the "
+           "terms of the GNU General Public License as published by the Free Software Foundation; "
+           "either version 2 of the License, or (at your option) any later version.</p>"
+           "<p>This program is distributed in the hope that it will be useful, but WITHOUT ANY "
+           "WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A "
+           "PARTICULAR PURPOSE. See the GNU General Public License for more details.</p>"
+           "<p>You should have received a copy of the GNU General Public License along with "
+           "this program; if not, write to the<br/>"
+           "Free Software Foundation, Inc.,<br/>"
+           "51 Franklin Street, Fifth Floor,<br/>"
+           "Boston, MA 02110-1301, USA.</p>"));
+}
+
+void
 Application::onQuit() {
+  if (RUNNING == timerState()) {
+    if (QMessageBox::Yes != QMessageBox::question(
+          0, tr("Quit?"), tr("The timer is still running. Realy quit?"),
+          QMessageBox::No|QMessageBox::Yes, QMessageBox::No)) {
+      return;
+    }
+  }
   quit();
 }
 
