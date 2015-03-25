@@ -45,6 +45,9 @@ public:
   QString profile();
   void setProfile(const QString &profile);
 
+  bool showTrayIcon();
+  void setShowTrayIcon(bool enable);
+
   int duration(const QString &prof=QString());
   void setDuration(int dur, const QString &prof=QString());
 

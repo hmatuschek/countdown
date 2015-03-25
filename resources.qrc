@@ -18,8 +18,9 @@
         <file>icons/icon_stopped16.png</file>
         <file>icons/icon_stopped32.png</file>
         <file>icons/icon_stopped64.png</file>
+        <file>sounds/steam_whistle.wav</file>
     </qresource>
-    <qresource lang="de_DE" prefix="/i18n">
+    <qresource prefix="/i18n" lang="de_DE">
         <file alias="countdown.qm">i18n/countdown_de_DE.qm</file>
     </qresource>
 </RCC>

@@ -30,15 +30,20 @@ Application::Application(int &argc, char *argv[])
   _hideClock = new QAction(tr("Hide"), this);
   _hideClock->setCheckable(true);
   _hideClock->setChecked(false);
+  if (! showTrayIcon()) { _hideClock->setEnabled(false); }
+
   _showNormal = new QAction(tr("Normal"), this);
   _showNormal->setCheckable(true);
   _showNormal->setChecked(true);
+
   _showOnTop = new QAction(tr("On top"), this);
   _showOnTop->setCheckable(true);
   _showOnTop->setChecked(false);
+
   _showFullScreen = new QAction(tr("Full screen"), this);
   _showFullScreen->setCheckable(true);
   _showFullScreen->setChecked(false);
+
   _clockDisplay = new QActionGroup(this);
   _clockDisplay->setExclusive(true);
   _clockDisplay->addAction(_hideClock);
@@ -56,7 +61,8 @@ Application::Application(int &argc, char *argv[])
       << QPair<QString,QString>(tr("Medieval Bell"), "://sounds/medieval_bell.wav")
       << QPair<QString,QString>(tr("Mono Bell"), "://sounds/mono_bell.wav")
       << QPair<QString,QString>(tr("School Bell"), "://sounds/school_bell.wav")
-      << QPair<QString,QString>(tr("Single Chime"), "://sounds/single_chime.wav");
+      << QPair<QString,QString>(tr("Single Chime"), "://sounds/single_chime.wav")
+      << QPair<QString,QString>(tr("Steam Whistle"), "://sounds/steam_whistle.wav");
 
   // Load sound effects
   _lmSound = new QSoundEffect();
@@ -78,7 +84,9 @@ Application::Application(int &argc, char *argv[])
   _trayIcon = new QSystemTrayIcon();
   _trayIcon->setIcon(QIcon("://icons/icon_stopped32.png"));
   _trayIcon->setContextMenu(menu());
-  _trayIcon->show();
+  if (showTrayIcon()) {
+    _trayIcon->show();
+  }
 
   QObject::connect(_startStop, SIGNAL(triggered()), this, SLOT(onTimerStart()));
   QObject::connect(_pause, SIGNAL(triggered()), this, SLOT(onTimerPause()));
@@ -234,6 +242,26 @@ void
 Application::setProfile(const QString &profile) {
   if (! hasProfile(profile)) { addProfile(profile); }
   _settings.setValue("profile", profile);
+}
+
+bool
+Application::showTrayIcon() {
+  return _settings.value("showTrayIcon", true).toBool();
+}
+
+void
+Application::setShowTrayIcon(bool enable) {
+  _settings.setValue("showTrayIcon", enable);
+  if (enable) {
+    _hideClock->setEnabled(true);
+    _trayIcon->show();
+  } else {
+    if (HIDDEN == clockVisibility()) {
+      setClockVisibility(NORMAL);
+    }
+    _hideClock->setEnabled(false);
+    _trayIcon->hide();
+  }
 }
 
 int
@@ -526,6 +554,8 @@ Application::onShowSettings() {
 
   setShowTicks(dialog.showTicks());
   setShowTimeLeft(dialog.showTimeLeft());
+
+  setShowTrayIcon(dialog.showTrayIcon());
 
   setClockWise(dialog.clockWise());
   setDuration(dialog.duration());

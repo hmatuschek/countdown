@@ -87,12 +87,17 @@ SettingsDialog::SettingsDialog(Application &app, QWidget *parent)
   _showTicks = new QCheckBox();
   _showTicks->setChecked(_app.showTicks());
   _showTicks->setToolTip(tr("If selected, the clock ticks are displayed."));
+  _showTrayIcon = new QCheckBox();
+  _showTrayIcon->setChecked(_app.showTrayIcon());
+  _showTrayIcon->setToolTip(tr("If selected, the tray-icon is shown."));
 
   displayLayout->addRow(tr("Default color"), _timeColor);
   displayLayout->addRow(tr("Last minutes color"), _lmColor);
   displayLayout->addRow(tr("Clockwise"), _clockWise);
   displayLayout->addRow(tr("Show time left"), _showTimeLeft);
   displayLayout->addRow(tr("Show time ticks"), _showTicks);
+  displayLayout->addRow(tr("Show tray icon"), _showTrayIcon);
+
   displayPage->setLayout(displayLayout);
   pages->addTab(displayPage, tr("Display"));
 

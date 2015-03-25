@@ -17,5 +17,9 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
 void
 MainWindow::closeEvent(QCloseEvent *evt) {
   hide(); evt->ignore();
-  _app.setClockVisibility(Application::HIDDEN);
+  if (_app.showTrayIcon()) {
+    _app.setClockVisibility(Application::HIDDEN);
+  } else {
+    _app.quit();
+  }
 }

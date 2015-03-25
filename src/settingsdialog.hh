@@ -33,6 +33,7 @@ public:
   inline bool clockWise() const { return _clockWise->isChecked(); }
   inline bool showTimeLeft() const { return _showTimeLeft->isChecked(); }
   inline bool showTicks() const { return _showTicks->isChecked(); }
+  inline bool showTrayIcon() const { return _showTrayIcon->isChecked(); }
 
 protected slots:
   void onProfileSelected(int idx);
@@ -55,6 +56,7 @@ protected:
   QCheckBox   *_clockWise;
   QCheckBox   *_showTimeLeft;
   QCheckBox   *_showTicks;
+  QCheckBox   *_showTrayIcon;
 };
 
 #endif // SETTINGSDIALOG_HH
