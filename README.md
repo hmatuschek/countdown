@@ -23,10 +23,21 @@ frequently used configurations easily.
   * Support of an arbitrary number of "profiles". This allows
 
 
-# Download
+# Install
 
 Windows and MacOS X binaries can be obtained from the 
-[releases](https://github.com/hmatuschek/countdown/releases) page. 
+[releases](https://github.com/hmatuschek/countdown/releases) page. Binary packages for Ubutnu are available at my [PPA](https://launchpad.net/~hmatuschek/+archive/ubuntu/ppa). You can add this repository to your list of package sources to receive automatic updates on new releases of the software. 
+
+To add the PPA simply call 
+```
+sudo apt-add-repository ppa:hmatuschek/ppa
+sudo apt-get update
+```
+
+Then you can install `countdown` by calling
+```
+sudo apt-get install countdown
+```
 
 
 # Licence
