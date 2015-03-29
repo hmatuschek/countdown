@@ -7,7 +7,7 @@ Standards-Version: 3.9.2
 Section: misc
 Homepage: http://github.com/hmatuschek/countdown
 
-Package: kochmorse
+Package: countdown
 Section: misc
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
