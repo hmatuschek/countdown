@@ -1,8 +1,10 @@
 countdown (1.1.0-1) unstable; urgency=low
 
+  * Fixes some issues with the sound settings.
+  * Added "About" dialog.
+  * Allows to disable the system tray icon.
 
-
- -- Hannes Matuschek <hmatuschek@gmail.com>  Tue, 25 March 2015 00:00:00 +0000
+ -- Hannes Matuschek <hmatuschek@gmail.com>  Fri, 27 March 2015 00:00:00 +0000
 
 countdown (1.0.0-1) unstable; urgency=low
 
