@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Countdown	
+GenericName=Countdown
+Comment=A simple Countdown/Timer
+Exec=countdown
+Icon=/usr/share/icons/countdown.svg
+Type=Application
+Categories=Education;Teaching;
+Terminal=false
+Encoding=UTF-8

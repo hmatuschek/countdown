@@ -37,4 +37,14 @@ set(CPACK_SOURCE_PACKAGE_FILE_NAME
 set(CPACK_SOURCE_IGNORE_FILES
   "/build/;/doc/;/dist/;/.git/;~$;.qm;.user$;${CPACK_SOURCE_IGNORE_FILES}")
 
+#
+# Install logo and .desktop file under Linux:
+#
+IF(UNIX AND NOT APPLE)
+ INSTALL(FILES shared/countdown.svg
+         DESTINATION share/icons)
+ INSTALL(FILES shared/countdown.desktop
+         DESTINATION share/applications)
+ENDIF(UNIX AND NOT APPLE)
+
 include(CPack)
