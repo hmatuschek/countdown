@@ -53,6 +53,7 @@ ScreenSaver::disable() {
  * Unix X11 specific code.
  * ******************************************************************************************** */
 #ifdef Q_OS_UNIX
+#ifndef Q_OS_OSX
 ScreenSaver::ScreenSaver(QObject *parent)
   : QObject(parent)
 {
@@ -68,6 +69,7 @@ void
 ScreenSaver::disable() {
   /// @todo Implement.
 }
+#endif
 #endif
 
 
