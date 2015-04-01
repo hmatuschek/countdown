@@ -20,7 +20,8 @@ frequently used configurations easily.
   * Clock display can be configured to be shown in full screen, "always on top" or hidden.
   * Configurable clock display scheme and colors.
   * Configurable sounds.
-  * Support of an arbitrary number of "profiles". This allows
+  * Supports an arbitrary number of configuration profiles.
+  * Disables the screen saver under Windows and MacOS X.
 
 
 # Install
