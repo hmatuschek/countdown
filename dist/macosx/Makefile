@@ -16,7 +16,7 @@ APP_LIBRARY_DIR = Countdown.app/Contents/Frameworks
 APP_BINARY_DIR  = Countdown.app/Contents/MacOS
 APP_PLUGIN_DIR  = Countdown.app/Contents/PlugIns
 APP_RESOURCE_DIR  = Countdown.app/Contents/Resources
-VERSION = 1.1.0
+VERSION = 1.2.0
 
 app: dmg
 

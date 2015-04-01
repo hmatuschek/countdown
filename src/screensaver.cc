@@ -5,7 +5,7 @@
 /* ******************************************************************************************** *
  * Microsoft Windows specific code.
  * ******************************************************************************************** */
-#ifdef Q_WS_WIN32
+#ifdef Q_OS_WIN32
 #include <Windows.h>
 
 ScreenSaver::ScreenSaver(QObject *parent)

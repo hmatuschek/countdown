@@ -3,7 +3,7 @@
 !define DESCRIPTION "A simple timer/count-down application."
 # These three must be integers
 !define VERSIONMAJOR 1
-!define VERSIONMINOR 1
+!define VERSIONMINOR 2
 !define VERSIONBUILD 0
 
 RequestExecutionLevel admin ;Require admin rights on NT6+ (When UAC is turned on)
