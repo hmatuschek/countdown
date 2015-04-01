@@ -29,7 +29,7 @@ ScreenSaver::disable() {
 /* ******************************************************************************************** *
  * Apple MacOS X specific code.
  * ******************************************************************************************** */
-#ifdef Q_OS_MAC
+#ifdef Q_OS_OSX
 ScreenSaver::ScreenSaver(QObject *parent)
   : QObject(parent)
 {
@@ -52,9 +52,9 @@ ScreenSaver::disable() {
 /* ******************************************************************************************** *
  * Unix X11 specific code.
  * ******************************************************************************************** */
-#ifdef Q_WS_X11
+#ifdef Q_OS_UNIX
 ScreenSaver::ScreenSaver(QObject *parent)
-  : Object(parent)
+  : QObject(parent)
 {
   // pass...
 }
@@ -70,6 +70,10 @@ ScreenSaver::disable() {
 }
 #endif
 
+
+/* ******************************************************************************************** *
+ * Generic code.
+ * ******************************************************************************************** */
 void
 ScreenSaver::setEnabled(bool enabled) {
   if (enabled) { enable(); }
