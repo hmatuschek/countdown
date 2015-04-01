@@ -13,19 +13,87 @@
 #include <QCloseEvent>
 
 
+/* ******************************************************************************************* *
+ * Implementation of ProfileSettings
+ * ******************************************************************************************* */
+ProfileSettings::ProfileSettings(const QString profile, Application &app)
+  : _profile(profile), _application(app)
+{
+  _duration     = _application.duration(_profile);
+  _lastMinutes  = _application.lastMinutes(_profile);
+  _lmSound      = _application.lastMinutesSound(_profile);
+  _endSound     = _application.endSound(_profile);
+  _timeColor    = _application.timeColor(_profile);
+  _lmColor      = _application.lastMinutesColor(_profile);
+  _clockWise    = _application.clockWise(_profile);
+  _showTimeLeft = _application.showTimeLeft(_profile);
+  _showTicks    = _application.showTicks();
+}
 
+ProfileSettings::ProfileSettings(const ProfileSettings &other)
+  : _profile(other._profile), _application(other._application),
+    _duration(other._duration), _lastMinutes(other._lastMinutes),
+    _lmSound(other._lmSound), _endSound(other._endSound),
+    _timeColor(other._timeColor), _clockWise(other._clockWise),
+    _showTimeLeft(other._showTimeLeft), _showTicks(other._showTicks)
+{
+  // pass...
+}
+
+ProfileSettings &
+ProfileSettings::operator =(const ProfileSettings &other) {
+  _duration     = other._duration;
+  _lastMinutes  = other._lastMinutes;
+  _lmSound      = other._lmSound;
+  _endSound     = other._endSound;
+  _timeColor    = other._timeColor;
+  _lmColor      = other._lmColor;
+  _clockWise    = other._clockWise;
+  _showTimeLeft = other._showTimeLeft;
+  _showTicks    = other._showTicks;
+
+  return *this;
+}
+
+void
+ProfileSettings::apply() {
+  _application.setDuration(_duration, _profile);
+  _application.setLastMinutes(_lastMinutes, _profile);
+  _application.setLastMinutesSound(_lmSound, _profile);
+  _application.setEndSound(_endSound, _profile);
+  _application.setTimeColor(_timeColor, _profile);
+  _application.setLastMinutesColor(_lmColor, _profile);
+  _application.setClockWise(_clockWise, _profile);
+  _application.setShowTimeLeft(_showTimeLeft, _profile);
+  _application.setShowTicks(_showTicks, _profile);
+}
+
+
+
+/* ******************************************************************************************* *
+ * Implementation of SettingsDialog
+ * ******************************************************************************************* */
 SettingsDialog::SettingsDialog(Application &app, QWidget *parent)
   : QDialog(parent), _app(app)
 {
   _profiles = new QComboBox();
   _profiles->addItem(tr("Default"), "");
-  _profiles->setCurrentIndex(0);
   _profiles->setToolTip(tr("Select a profile."));
+  _profiles->setCurrentIndex(0);
+  _lastProfileIndex = 0;
+
+  /* Load all profile settings. */
   QStringList profiles = _app.profiles();
+  _profileSettings.push_back(ProfileSettings("", _app));
   for (int i=0; i<profiles.size(); i++) {
     _profiles->addItem(profiles.at(i), profiles.at(i));
-    if (profiles.at(i) == _app.profile()) { _profiles->setCurrentIndex(i+1); }
+    if (profiles.at(i) == _app.profile()) {
+      _profiles->setCurrentIndex(i+1);
+      _lastProfileIndex = (i+1);
+    }
+    _profileSettings.push_back(ProfileSettings(profiles.at(i), _app));
   }
+
   QHBoxLayout *profLayout = new QHBoxLayout();
   QPushButton *addProf = new QPushButton(tr("+"));
   addProf->setToolTip(tr("Create a new profile."));
@@ -118,18 +186,32 @@ SettingsDialog::SettingsDialog(Application &app, QWidget *parent)
 
 
 void
-SettingsDialog::onProfileSelected(int idx) {
-  QString profile = _profiles->itemData(idx).toString();
+SettingsDialog::onProfileSelected(int idx)
+{
+  // Save the current settings
+  _profileSettings[_lastProfileIndex].setDuration(_duration->value());
+  _profileSettings[_lastProfileIndex].setLastMinutes(_lastMinutes->value());
+  _profileSettings[_lastProfileIndex].setLastMinutesSound(_lmSound->selectedSound());
+  _profileSettings[_lastProfileIndex].setEndSound(_endSound->selectedSound());
+  _profileSettings[_lastProfileIndex].setTimeColor(_timeColor->color());
+  _profileSettings[_lastProfileIndex].setLastMinutesColor(_lmColor->color());
+  _profileSettings[_lastProfileIndex].setClockWise(_clockWise->isChecked());
+  _profileSettings[_lastProfileIndex].setShowTimeLeft(_showTimeLeft->isChecked());
+  _profileSettings[_lastProfileIndex].setShowTicks(_showTicks->isChecked());
+
   // Update dialog for selected profile
-  _duration->setValue(_app.duration(profile));
-  _lastMinutes->setValue(_app.lastMinutes(profile));
-  _lmSound->selectSound(_app.lastMinutesSound(profile));
-  _endSound->selectSound(_app.endSound(profile));
-  _timeColor->setColor(_app.timeColor(profile));
-  _lmColor->setColor(_app.lastMinutesColor(profile));
-  _clockWise->setChecked(_app.clockWise(profile));
-  _showTimeLeft->setChecked(_app.showTimeLeft(profile));
-  _showTicks->setChecked(_app.showTicks(profile));
+  _duration->setValue(_profileSettings.at(idx).duration());
+  _lastMinutes->setValue(_profileSettings.at(idx).lastMinutes());
+  _lmSound->selectSound(_profileSettings.at(idx).lastMinutesSound());
+  _endSound->selectSound(_profileSettings.at(idx).endSound());
+  _timeColor->setColor(_profileSettings.at(idx).timeColor());
+  _lmColor->setColor(_profileSettings.at(idx).lastMinutesColor());
+  _clockWise->setChecked(_profileSettings.at(idx).clockWise());
+  _showTimeLeft->setChecked(_profileSettings.at(idx).showTimeLeft());
+  _showTicks->setChecked(_profileSettings.at(idx).showTicks());
+
+  // Store currently selected profile index
+  _lastProfileIndex = idx;
 }
 
 void
@@ -145,20 +227,25 @@ SettingsDialog::onAddProfile() {
       return;
     }
   }
+
   // Add profile and select it
   _profiles->addItem(name, name);
+  _profileSettings.push_back(ProfileSettings("", _app));
   _profiles->setCurrentIndex(_profiles->count()-1);
 }
 
 void
 SettingsDialog::onRemProfile() {
-  if (0 == _profiles->currentIndex()) {
+  if (0 == _lastProfileIndex) {
     QMessageBox::information(0, tr("Can not remove profile"),
                              tr("Can not remove default profile."));
     return;
   }
-  _removedProfiles << _profiles->currentData().toString();
-  _profiles->removeItem(_profiles->currentIndex());
+  int currentIdx = _lastProfileIndex;
+  // Remove profile from combobox, this also updates the "removed" settings
+  _profiles->removeItem(currentIdx);
+  // Finally remove the associated settings
+  _profileSettings.removeAt(currentIdx);
 }
 
 void

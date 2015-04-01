@@ -6,7 +6,7 @@
 #include <QVector>
 #include "application.hh"
 
-/** Count-down clock widget. */
+/** Countdown clock widget. */
 class Countdown : public QWidget
 {
   Q_OBJECT

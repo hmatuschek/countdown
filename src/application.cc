@@ -4,11 +4,12 @@
 #include <QMenu>
 #include <QFileInfo>
 #include <QMessageBox>
+#include <QStringList>
 
 
 Application::Application(int &argc, char *argv[])
   : QApplication(argc, argv), _settings("com.github.hmatuschek", "Countdown"),
-    _translator(), _timer(), _menu(0)
+    _translator(), _menu(0), _timer()
 {
   _translator.load("://i18n/countdown.qm");
   this->installTranslator(&_translator);
@@ -195,6 +196,17 @@ Application::profiles() {
   //qDebug() << "Profiles:" << prfs;
   return prfs;
 }
+
+void
+Application::setProfiles(const QStringList &profiles) {
+  _settings.beginWriteArray("profiles");
+  for (int i=0; i<profiles.size(); i++) {
+    _settings.setArrayIndex(i);
+    _settings.value("name", profiles.at(i));
+  }
+  _settings.endArray();
+}
+
 
 bool
 Application::hasProfile(const QString &name) {
@@ -510,7 +522,8 @@ Application::onAbout() {
   QMessageBox::about(
         0, tr("About Countdown"),
         tr("<h2 align=\"center\">Countdown - version 1.1.0</h2>"
-           "<h4 align=\"center\">https://github.com/hmatuschek/countdown</h4>"
+           "<h4 align=\"center\"><a href=\"https://github.com/hmatuschek/countdown\">"
+           "https://github.com/hmatuschek/countdown</a></h4>"
            "<p align=\"center\">(c) 2015, by Hannes Matuschek <hmatuschek@gmail.com></p>"
            "<p>This program is free software; you can redistribute it and/or modify it under the "
            "terms of the GNU General Public License as published by the Free Software Foundation; "
@@ -538,26 +551,30 @@ Application::onQuit() {
 }
 
 void
-Application::onShowSettings() {
+Application::onShowSettings()
+{
+  // Show dialog
   SettingsDialog dialog(*this);
-  if (QDialog::Accepted != dialog.exec()) {
-    return;
+  if (QDialog::Accepted != dialog.exec()) { return; }
+
+  // Get list of all profile settings
+  QList<ProfileSettings> &settings = dialog.profileSettings();
+  QList<QString> profileNames;
+
+  // Apply all settings left
+  for (int i=0; i<settings.size(); i++) {
+    settings[i].apply();
+    if (i>0) { profileNames.push_back(settings[i].profile()); }
   }
 
-  setProfile(dialog.profile());
+  // Update list of available profiles
+  setProfiles(profileNames);
 
-  setEndSound(dialog.endSound());
-  setLastMinutesSound(dialog.lastMinutesSound());
+  // Get selected profile
+  QString profile = dialog.profile();
 
-  setTimeColor(dialog.timeColor());
-  setLastMinutesColor(dialog.lastMinutesColor());
-
-  setShowTicks(dialog.showTicks());
-  setShowTimeLeft(dialog.showTimeLeft());
-
+  // Set the current profile
+  setProfile(profile);
+  // Update "show tray icon".
   setShowTrayIcon(dialog.showTrayIcon());
-
-  setClockWise(dialog.clockWise());
-  setDuration(dialog.duration());
-  setLastMinutes(dialog.lastMinutes());
 }
