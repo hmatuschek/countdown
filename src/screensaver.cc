@@ -1,6 +1,10 @@
 #include "screensaver.hh"
 #include <QtConfig>
 
+
+/* ******************************************************************************************** *
+ * Microsoft Windows specific code.
+ * ******************************************************************************************** */
 #ifdef Q_WS_WIN32
 #include <Windows.h>
 
@@ -11,16 +15,20 @@ ScreenSaver::ScreenSaver(QObject *parent)
 }
 
 void
-ScreenSaver::enable(bool enable) {
-  if (enable) {
-    SetThreadExecutionState(ES_CONTINUOUS);
-  } else {
-    SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED);
-  }
+ScreenSaver::enable() {
+  SetThreadExecutionState(ES_CONTINUOUS);
+}
+
+void
+ScreenSaver::disable() {
+  SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED);
 }
 #endif
 
 
+/* ******************************************************************************************** *
+ * Apple MacOS X specific code.
+ * ******************************************************************************************** */
 #ifdef Q_OS_MAC
 ScreenSaver::ScreenSaver(QObject *parent)
   : QObject(parent)
@@ -29,17 +37,21 @@ ScreenSaver::ScreenSaver(QObject *parent)
 }
 
 void
-ScreenSaver::enable(bool enable) {
-  if (enable) {
-    IOPMAssertionRelease(_assertionID);
-  } else {
-    IOPMAssertionCreateWithName(kIOPMAssertionTypeNoDisplaySleep,
-                                kIOPMAssertionLevelOn, CFSTR("Countdown Clock"), &_assertionID);
-  }
+ScreenSaver::enable() {
+  IOPMAssertionRelease(_assertionID);
+}
+
+void
+ScreenSaver::disable() {
+  IOPMAssertionCreateWithName(kIOPMAssertionTypeNoDisplaySleep,
+                              kIOPMAssertionLevelOn, CFSTR("Countdown Clock"), &_assertionID);
 }
 #endif
 
 
+/* ******************************************************************************************** *
+ * Unix X11 specific code.
+ * ******************************************************************************************** */
 #ifdef Q_WS_X11
 ScreenSaver::ScreenSaver(QObject *parent)
   : Object(parent)
@@ -48,7 +60,18 @@ ScreenSaver::ScreenSaver(QObject *parent)
 }
 
 void
-ScreenSaver::enable(bool enable) {
-  /// @todo Implement
+ScreenSaver::enable() {
+  /// @todo Implement.
+}
+
+void
+ScreenSaver::disable() {
+  /// @todo Implement.
 }
 #endif
+
+void
+ScreenSaver::setEnabled(bool enabled) {
+  if (enabled) { enable(); }
+  else { disable(); }
+}

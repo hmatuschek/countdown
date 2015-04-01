@@ -7,11 +7,11 @@ int main(int argc, char *argv[])
   app.setQuitOnLastWindowClosed(false);
 
   ScreenSaver screenSaver;
-  screenSaver.enable(false);
+  screenSaver.disable();
 
   app.exec();
 
-  screenSaver.enable(true);
+  screenSaver.enable();
 
   return 0;
 }
