@@ -4,35 +4,35 @@
 <context>
     <name>Application</name>
     <message>
-        <location filename="../src/application.cc" line="27"/>
-        <location filename="../src/application.cc" line="122"/>
+        <location filename="../src/application.cc" line="28"/>
+        <location filename="../src/application.cc" line="123"/>
         <source>Start</source>
         <translation>Start</translation>
     </message>
     <message>
-        <location filename="../src/application.cc" line="28"/>
-        <location filename="../src/application.cc" line="117"/>
-        <location filename="../src/application.cc" line="123"/>
+        <location filename="../src/application.cc" line="29"/>
+        <location filename="../src/application.cc" line="118"/>
+        <location filename="../src/application.cc" line="124"/>
         <source>Pause</source>
         <translation>Anhalten</translation>
     </message>
     <message>
-        <location filename="../src/application.cc" line="31"/>
+        <location filename="../src/application.cc" line="32"/>
         <source>Hide</source>
         <translation>Versteckt</translation>
     </message>
     <message>
-        <location filename="../src/application.cc" line="36"/>
+        <location filename="../src/application.cc" line="37"/>
         <source>Normal</source>
         <translation>Normal</translation>
     </message>
     <message>
-        <location filename="../src/application.cc" line="40"/>
+        <location filename="../src/application.cc" line="41"/>
         <source>On top</source>
         <translation>Oben auf</translation>
     </message>
     <message>
-        <location filename="../src/application.cc" line="44"/>
+        <location filename="../src/application.cc" line="45"/>
         <source>Full screen</source>
         <translation>Vollbild</translation>
     </message>
@@ -41,84 +41,84 @@
         <translation type="vanished">Einstellungen...</translation>
     </message>
     <message>
-        <location filename="../src/application.cc" line="55"/>
+        <location filename="../src/application.cc" line="56"/>
         <source>Settings ...</source>
         <translation>Einstellungen ...</translation>
     </message>
     <message>
-        <location filename="../src/application.cc" line="56"/>
-        <location filename="../src/application.cc" line="523"/>
+        <location filename="../src/application.cc" line="57"/>
+        <location filename="../src/application.cc" line="524"/>
         <source>About Countdown</source>
         <translation>Über Countdown</translation>
     </message>
     <message>
-        <location filename="../src/application.cc" line="57"/>
+        <location filename="../src/application.cc" line="58"/>
         <source>Quit</source>
         <translation>Beenden</translation>
     </message>
     <message>
-        <location filename="../src/application.cc" line="60"/>
+        <location filename="../src/application.cc" line="61"/>
         <source>Factory Bell</source>
         <translation>Fabrikglocke</translation>
     </message>
     <message>
-        <location filename="../src/application.cc" line="61"/>
+        <location filename="../src/application.cc" line="62"/>
         <source>Big Bell</source>
         <translation>Große Glocke</translation>
     </message>
     <message>
-        <location filename="../src/application.cc" line="62"/>
+        <location filename="../src/application.cc" line="63"/>
         <source>Medieval Bell</source>
         <translation>Mittelalterliche Glocke</translation>
     </message>
     <message>
-        <location filename="../src/application.cc" line="63"/>
+        <location filename="../src/application.cc" line="64"/>
         <source>Mono Bell</source>
         <translation>Mono Glocke</translation>
     </message>
     <message>
-        <location filename="../src/application.cc" line="64"/>
+        <location filename="../src/application.cc" line="65"/>
         <source>School Bell</source>
         <translation>Schulglocke</translation>
     </message>
     <message>
-        <location filename="../src/application.cc" line="65"/>
+        <location filename="../src/application.cc" line="66"/>
         <source>Single Chime</source>
         <translation>Einzelklang</translation>
     </message>
     <message>
-        <location filename="../src/application.cc" line="66"/>
+        <location filename="../src/application.cc" line="67"/>
         <source>Steam Whistle</source>
         <translation>Dampfpfeife</translation>
     </message>
     <message>
-        <location filename="../src/application.cc" line="116"/>
-        <location filename="../src/application.cc" line="129"/>
+        <location filename="../src/application.cc" line="117"/>
+        <location filename="../src/application.cc" line="130"/>
         <source>Stop</source>
         <translation>Stop</translation>
     </message>
     <message>
-        <location filename="../src/application.cc" line="130"/>
+        <location filename="../src/application.cc" line="131"/>
         <source>Resume</source>
         <translation>Fortsetzen</translation>
     </message>
     <message>
-        <location filename="../src/application.cc" line="460"/>
+        <location filename="../src/application.cc" line="461"/>
         <source>View</source>
         <translation>Ansicht</translation>
     </message>
     <message>
-        <location filename="../src/application.cc" line="524"/>
-        <source>&lt;h2 align=&quot;center&quot;&gt;Countdown - version 1.2.1&lt;/h2&gt;&lt;h4 align=&quot;center&quot;&gt;&lt;a href=&quot;https://github.com/hmatuschek/countdown&quot;&gt;https://github.com/hmatuschek/countdown&lt;/a&gt;&lt;/h4&gt;&lt;p align=&quot;center&quot;&gt;(c) 2015, by Hannes Matuschek &lt;hmatuschek@gmail.com&gt;&lt;/p&gt;&lt;p&gt;This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.&lt;/p&gt;&lt;p&gt;This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.&lt;/p&gt;&lt;p&gt;You should have received a copy of the GNU General Public License along with this program; if not, write to the&lt;br/&gt;Free Software Foundation, Inc.,&lt;br/&gt;51 Franklin Street, Fifth Floor,&lt;br/&gt;Boston, MA 02110-1301, USA.&lt;/p&gt;</source>
+        <location filename="../src/application.cc" line="525"/>
+        <source>&lt;h2 align=&quot;center&quot;&gt;Countdown - version 1.2.2&lt;/h2&gt;&lt;h4 align=&quot;center&quot;&gt;&lt;a href=&quot;https://github.com/hmatuschek/countdown&quot;&gt;https://github.com/hmatuschek/countdown&lt;/a&gt;&lt;/h4&gt;&lt;p align=&quot;center&quot;&gt;(c) 2015, by Hannes Matuschek &lt;hmatuschek@gmail.com&gt;&lt;/p&gt;&lt;p&gt;This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.&lt;/p&gt;&lt;p&gt;This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.&lt;/p&gt;&lt;p&gt;You should have received a copy of the GNU General Public License along with this program; if not, write to the&lt;br/&gt;Free Software Foundation, Inc.,&lt;br/&gt;51 Franklin Street, Fifth Floor,&lt;br/&gt;Boston, MA 02110-1301, USA.&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/application.cc" line="545"/>
+        <location filename="../src/application.cc" line="546"/>
         <source>Quit?</source>
         <translation>Beenden?</translation>
     </message>
     <message>
-        <location filename="../src/application.cc" line="545"/>
+        <location filename="../src/application.cc" line="546"/>
         <source>The timer is still running. Realy quit?</source>
         <translation>Der Timer läuft noch. Trotzdem beenden?</translation>
     </message>
