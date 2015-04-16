@@ -4,7 +4,7 @@
 # These three must be integers
 !define VERSIONMAJOR 1
 !define VERSIONMINOR 2
-!define VERSIONBUILD 0
+!define VERSIONBUILD 1
 
 RequestExecutionLevel admin ;Require admin rights on NT6+ (When UAC is turned on)
  
