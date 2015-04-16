@@ -34,14 +34,16 @@ ProfileSettings::ProfileSettings(const ProfileSettings &other)
   : _profile(other._profile), _application(other._application),
     _duration(other._duration), _lastMinutes(other._lastMinutes),
     _lmSound(other._lmSound), _endSound(other._endSound),
-    _timeColor(other._timeColor), _clockWise(other._clockWise),
-    _showTimeLeft(other._showTimeLeft), _showTicks(other._showTicks)
+    _timeColor(other._timeColor), _lmColor(other._lmColor),
+    _clockWise(other._clockWise), _showTimeLeft(other._showTimeLeft),
+    _showTicks(other._showTicks)
 {
   // pass...
 }
 
 ProfileSettings &
 ProfileSettings::operator =(const ProfileSettings &other) {
+  _profile      = other._profile;
   _duration     = other._duration;
   _lastMinutes  = other._lastMinutes;
   _lmSound      = other._lmSound;
@@ -84,7 +86,9 @@ SettingsDialog::SettingsDialog(Application &app, QWidget *parent)
 
   /* Load all profile settings. */
   QStringList profiles = _app.profiles();
+  // Add default profile
   _profileSettings.push_back(ProfileSettings("", _app));
+  // Add user-defined profiles
   for (int i=0; i<profiles.size(); i++) {
     _profiles->addItem(profiles.at(i), profiles.at(i));
     if (profiles.at(i) == _app.profile()) {
@@ -186,6 +190,23 @@ SettingsDialog::SettingsDialog(Application &app, QWidget *parent)
 
 
 void
+SettingsDialog::accept() {
+  // Save the current settings
+  _profileSettings[_lastProfileIndex].setDuration(_duration->value());
+  _profileSettings[_lastProfileIndex].setLastMinutes(_lastMinutes->value());
+  _profileSettings[_lastProfileIndex].setLastMinutesSound(_lmSound->selectedSound());
+  _profileSettings[_lastProfileIndex].setEndSound(_endSound->selectedSound());
+  _profileSettings[_lastProfileIndex].setTimeColor(_timeColor->color());
+  _profileSettings[_lastProfileIndex].setLastMinutesColor(_lmColor->color());
+  _profileSettings[_lastProfileIndex].setClockWise(_clockWise->isChecked());
+  _profileSettings[_lastProfileIndex].setShowTimeLeft(_showTimeLeft->isChecked());
+  _profileSettings[_lastProfileIndex].setShowTicks(_showTicks->isChecked());
+
+  // quit dialog successfully
+  QDialog::accept();
+}
+
+void
 SettingsDialog::onProfileSelected(int idx)
 {
   // Save the current settings
@@ -230,7 +251,7 @@ SettingsDialog::onAddProfile() {
 
   // Add profile and select it
   _profiles->addItem(name, name);
-  _profileSettings.push_back(ProfileSettings("", _app));
+  _profileSettings.push_back(ProfileSettings(name, _app));
   _profiles->setCurrentIndex(_profiles->count()-1);
 }
 

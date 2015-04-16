@@ -13,12 +13,13 @@ class SoundSelect : public QWidget
   Q_OBJECT
 
 public:
+  /** Constructor. */
   explicit SoundSelect(const Application::SoundItemList &sounds, const QString &selectedSound,
                        QWidget *parent = 0);
 
   /** Returns the path to the selected sound. */
   inline QString selectedSound() { return _sounds->currentData().toString(); }
-
+  /** Selects the specified sound. */
   void selectSound(const QString &sound);
 
 protected slots:
