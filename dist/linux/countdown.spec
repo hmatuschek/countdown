@@ -1,6 +1,6 @@
 Summary: A simple countdown and timer application.
 
-%define version 1.1.0
+%define version 1.2.1
 
 License: GPL-2.0+
 Group: Applications/Education

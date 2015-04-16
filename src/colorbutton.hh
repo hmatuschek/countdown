@@ -2,6 +2,7 @@
 #define COLORBUTTON_HH
 
 #include <QPushButton>
+#include <QColor>
 
 /** A simple color picker button. It displays a color instead of a label and shows a color
  * selection dialog if clicked. */

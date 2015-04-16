@@ -134,186 +134,186 @@
 <context>
     <name>SettingsDialog</name>
     <message>
-        <location filename="../src/settingsdialog.cc" line="80"/>
+        <location filename="../src/settingsdialog.cc" line="82"/>
         <source>Default</source>
         <translation>Standard</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="81"/>
+        <location filename="../src/settingsdialog.cc" line="83"/>
         <source>Select a profile.</source>
         <translation>Wähle ein Profil aus.</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="98"/>
+        <location filename="../src/settingsdialog.cc" line="102"/>
         <source>+</source>
         <translation>+</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="99"/>
+        <location filename="../src/settingsdialog.cc" line="103"/>
         <source>Create a new profile.</source>
         <translation>Ein neues Profil anlegen.</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="100"/>
+        <location filename="../src/settingsdialog.cc" line="104"/>
         <source>-</source>
         <translation>-</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="101"/>
+        <location filename="../src/settingsdialog.cc" line="105"/>
         <source>Delete the selected profile.</source>
         <translation>Das ausgewählte Pofil löschen.</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="102"/>
+        <location filename="../src/settingsdialog.cc" line="106"/>
         <source>Profile</source>
         <translation>Profil</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="116"/>
+        <location filename="../src/settingsdialog.cc" line="120"/>
         <source>Set the overall duration of the timer.</source>
         <translation>Die Dauer des Timers setzen.</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="120"/>
+        <location filename="../src/settingsdialog.cc" line="124"/>
         <source>Specify the last minutes of the timer.
 The clock display will change the color for this timespan</source>
         <translation>Bestimmt die &quot;letzten Minuten&quot;.
 Die Farbe der Uhr ändert sich für diesen Zeitraum.</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="123"/>
+        <location filename="../src/settingsdialog.cc" line="127"/>
         <source>Duration [min]</source>
         <translation>Dauer [min]</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="124"/>
+        <location filename="../src/settingsdialog.cc" line="128"/>
         <source>Last minutes</source>
         <translation>Letzten Minuten</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="126"/>
+        <location filename="../src/settingsdialog.cc" line="130"/>
         <source>Timer</source>
         <translation>Zeiten</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="132"/>
+        <location filename="../src/settingsdialog.cc" line="136"/>
         <source>Select the sound to be played when the last minutes starts.
 Select &lt;none&gt; to disable.</source>
         <translation>Wählen Sie den Klang aus, welcher zu Beginn der &quot;letzten Minuten&quot; gespielt wird.</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="135"/>
+        <location filename="../src/settingsdialog.cc" line="139"/>
         <source>Select the sound to be played when the time is over.
 Select &lt;none&gt; to disable.</source>
         <translation>Wählen sie den Klang, welcher zum Ende gespielt wird.</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="137"/>
+        <location filename="../src/settingsdialog.cc" line="141"/>
         <source>Last minutes sound</source>
         <translation>&quot;Letzte Minuten&quot; Klang</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="138"/>
+        <location filename="../src/settingsdialog.cc" line="142"/>
         <source>End sound</source>
         <translation>&quot;Ende&quot; Klang</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="140"/>
+        <location filename="../src/settingsdialog.cc" line="144"/>
         <source>Sound</source>
         <translation>Klänge</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="146"/>
+        <location filename="../src/settingsdialog.cc" line="150"/>
         <source>Select the color for the clock.</source>
         <translation>Wählen Sie die Farbe der Uhr.</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="148"/>
+        <location filename="../src/settingsdialog.cc" line="152"/>
         <source>Select the color for the clock when the last minutes starts.</source>
         <translation>Wählen sie die Farbe der Uhr in den &quot;letzten Minuten&quot;.</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="151"/>
+        <location filename="../src/settingsdialog.cc" line="155"/>
         <source>Specifies the clock direction.</source>
         <translation>Legt den Uhrzeigersinn fest.</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="154"/>
+        <location filename="../src/settingsdialog.cc" line="158"/>
         <source>If selected, the remaining mintues are shown.</source>
         <translation>Wenn ausgewählt wird die verbleibende Zeig angezeigt.</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="157"/>
+        <location filename="../src/settingsdialog.cc" line="161"/>
         <source>If selected, the clock ticks are displayed.</source>
         <translation>Wenn ausgewählt werden die Uhrenstriche angezeigt.</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="160"/>
+        <location filename="../src/settingsdialog.cc" line="164"/>
         <source>If selected, the tray-icon is shown.</source>
         <translation>Wenn ausgewählt wird das Tray Icon angezeigt.</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="162"/>
+        <location filename="../src/settingsdialog.cc" line="166"/>
         <source>Default color</source>
         <translation>Uhrfarbe</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="163"/>
+        <location filename="../src/settingsdialog.cc" line="167"/>
         <source>Last minutes color</source>
         <translation>Uhrfarbe &quot;letzte Minuten&quot;</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="164"/>
+        <location filename="../src/settingsdialog.cc" line="168"/>
         <source>Clockwise</source>
         <translation>Uhrzeigersinn</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="165"/>
+        <location filename="../src/settingsdialog.cc" line="169"/>
         <source>Show time left</source>
         <translation>Restzeit anzeigen</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="166"/>
+        <location filename="../src/settingsdialog.cc" line="170"/>
         <source>Show time ticks</source>
         <translation>Uhrenstiche</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="167"/>
+        <location filename="../src/settingsdialog.cc" line="171"/>
         <source>Show tray icon</source>
         <translation>Tray-Icon anzeigen</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="170"/>
+        <location filename="../src/settingsdialog.cc" line="174"/>
         <source>Display</source>
         <translation>Anzeige</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="220"/>
+        <location filename="../src/settingsdialog.cc" line="241"/>
         <source>Select a profile name</source>
         <translation>Wähle ein Profilname</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="220"/>
+        <location filename="../src/settingsdialog.cc" line="241"/>
         <source>Profile name</source>
         <translation>Profilname</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="225"/>
+        <location filename="../src/settingsdialog.cc" line="246"/>
         <source>Can not create profile</source>
         <translation>Kann Profil nicht anlegen</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="226"/>
+        <location filename="../src/settingsdialog.cc" line="247"/>
         <source>Can not create profile &apos;%1&apos;: Profile exists already.</source>
         <translation>Kann Profil &apos;%1&apos; nicht anlegen: Profil existiert bereits.</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="240"/>
+        <location filename="../src/settingsdialog.cc" line="261"/>
         <source>Can not remove profile</source>
         <translation>Kann Profil nicht löschen</translation>
     </message>
     <message>
-        <location filename="../src/settingsdialog.cc" line="241"/>
+        <location filename="../src/settingsdialog.cc" line="262"/>
         <source>Can not remove default profile.</source>
         <translation>Kann Standardprofil nicht löschen.</translation>
     </message>
