@@ -81,13 +81,13 @@ SettingsDialog::SettingsDialog(Application &app, QWidget *parent)
   _profiles = new QComboBox();
   _profiles->addItem(tr("Default"), "");
   _profiles->setToolTip(tr("Select a profile."));
-  _profiles->setCurrentIndex(0);
-  _lastProfileIndex = 0;
 
-  /* Load all profile settings. */
-  QStringList profiles = _app.profiles();
   // Add default profile
   _profileSettings.push_back(ProfileSettings("", _app));
+  _profiles->setCurrentIndex(0);
+  _lastProfileIndex = 0;
+  /* Load all profile settings. */
+  QStringList profiles = _app.profiles();
   // Add user-defined profiles
   for (int i=0; i<profiles.size(); i++) {
     _profiles->addItem(profiles.at(i), profiles.at(i));
@@ -265,6 +265,7 @@ SettingsDialog::onRemProfile() {
   int currentIdx = _lastProfileIndex;
   // Remove profile from combobox, this also updates the "removed" settings
   _profiles->removeItem(currentIdx);
+  _lastProfileIndex = _profiles->currentIndex();
   // Finally remove the associated settings
   _profileSettings.removeAt(currentIdx);
 }

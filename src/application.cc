@@ -5,6 +5,7 @@
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QStringList>
+#include <QDebug>
 
 
 Application::Application(int &argc, char *argv[])
@@ -193,18 +194,18 @@ Application::profiles() {
     prfs.append(_settings.value("name").toString());
   }
   _settings.endArray();
-  //qDebug() << "Profiles:" << prfs;
   return prfs;
 }
 
 void
 Application::setProfiles(const QStringList &profiles) {
-  _settings.beginWriteArray("profiles");
+  _settings.beginWriteArray("profiles", profiles.size());
   for (int i=0; i<profiles.size(); i++) {
     _settings.setArrayIndex(i);
-    _settings.value("name", profiles.at(i));
+    _settings.setValue("name", profiles.at(i));
   }
   _settings.endArray();
+  _settings.sync();
 }
 
 
@@ -227,7 +228,6 @@ Application::hasProfile(const QString &name) {
 
 void
 Application::addProfile(const QString &name) {
-  //qDebug() << "Add profile" << name;
   QStringList prfs;
   int N = _settings.beginReadArray("profiles");
   for (int i=0; i<N; i++) {
@@ -242,6 +242,7 @@ Application::addProfile(const QString &name) {
     _settings.setValue("name", prfs.at(i));
   }
   _settings.endArray();
+  _settings.sync();
 }
 
 QString
