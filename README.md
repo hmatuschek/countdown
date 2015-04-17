@@ -27,7 +27,7 @@ frequently used configurations easily.
 # Install
 
 Windows and MacOS X binaries can be obtained from the 
-[releases](https://github.com/hmatuschek/countdown/releases) page. Binary packages for Ubutnu are available at my [PPA](https://launchpad.net/~hmatuschek/+archive/ubuntu/ppa). You can add this repository to your list of package sources to receive automatic updates on new releases of the software. 
+[releases](https://github.com/hmatuschek/countdown/releases) page. Binary packages for Ubutnu are available at my [PPA](https://launchpad.net/~hmatuschek/+archive/ubuntu/ppa)(personal package archive). You can add this repository to your list of package sources to receive automatic updates on new releases of the software. 
 
 To add the PPA simply call 
 ```
